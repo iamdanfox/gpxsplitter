@@ -15,7 +15,7 @@
 
 <!-- Use Downloadify for the result files -->
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="jquery.min.js"></script>
 <script type="text/javascript">
 $(function(){
   // Check for the various File API support.
@@ -40,7 +40,7 @@ $(function(){
 
     // based on http://stackoverflow.com/questions/17604071/parse-xml-using-javascript
     var parser = new DOMParser()
-    var xmlDOM = parser.parseFromString(text, 'text/xml') // causing errors.
+    var xmlDOM = parser.parseFromString(text, 'text/xml') // causing errors.§
 
     console.debug(xmlDOM)
 
