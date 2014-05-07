@@ -40,8 +40,16 @@ $(function(){
       // based on http://stackoverflow.com/questions/17604071/parse-xml-using-javascript
       var parser = new DOMParser()
       var xml = parser.parseFromString(xmlString, 'text/xml')
+      var xml2 = parser.parseFromString(xmlString, 'text/xml') // TODO clone instead
 
-      console.debug(xmlDOM)
+      // Split the "gpx trk trkseg" into multiple parts
+      var trkpts = xml2.getElementsByTagName('trkpt')
+      console.debug(trkpts)
+
+      // TODO iterate through trkpts, remove some of them.
+
+      trkpts[0].remove()
+
     }
     reader.readAsText(gpxFile)
   })
