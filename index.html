@@ -32,19 +32,18 @@ $(function(){
     var gpxFile = e.target.files[0]
     // TODO listen to 'drop' event.  `e.dataTransfer.files` and `e.dataTransfer.dropEffect = 'copy'`
     console.log(gpxFile.name)
+
     var reader = new FileReader()
     reader.onload = function(e) {
-      console.debug(e.target.result)
+      var xmlString = e.target.result
+
+      // based on http://stackoverflow.com/questions/17604071/parse-xml-using-javascript
+      var parser = new DOMParser()
+      var xml = parser.parseFromString(xmlString, 'text/xml')
+
+      console.debug(xmlDOM)
     }
-    var text = reader.readAsText(gpxFile)
-
-    // based on http://stackoverflow.com/questions/17604071/parse-xml-using-javascript
-    var parser = new DOMParser()
-    var xmlDOM = parser.parseFromString(text, 'text/xml') // causing errors.§
-
-    console.debug(xmlDOM)
-
-
+    reader.readAsText(gpxFile)
   })
 
 })
