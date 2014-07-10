@@ -7,7 +7,16 @@
 </head>
 <body>
 <h1>Strava Split</h1>
+<!--
 
+MINIMAL AIMS:
+1. upload a GPX file and parse it
+2. Summarise / visualise file.
+3. Allow user to choose a split point
+4. Return valid GPX files.
+
+
+-->
 <p>Upload a .gpx file</p>
 <form>
 <input type="file"> <!-- multiple="multiple" accept="image/jpg, ..." -->
@@ -43,12 +52,29 @@ $(function(){
       var xml2 = parser.parseFromString(xmlString, 'text/xml') // TODO clone instead
 
       // Split the "gpx trk trkseg" into multiple parts
-      var trkpts = xml2.getElementsByTagName('trkpt')
-      console.debug(trkpts)
+      var trkpts = xml.getElementsByTagName('trkpt')
+      var trkpts2 = xml2.getElementsByTagName('trkpt')
 
       // TODO iterate through trkpts, remove some of them.
 
-      trkpts[0].remove()
+      var cutoff = 30;
+      var len = trkpts.length
+      // do some removing
+      for (var i=0;i<len;i++)  {
+        if(i<cutoff)
+          trkpts[0].remove() // will end up with the second half
+        else
+          trkpts2[cutoff].remove()
+      }
+
+      console.log(trkpts.length, trkpts2.length)
+
+
+      // serialize out to new document
+      var serializer = new XMLSerializer()
+      var newXMLString = serializer.serializeToString(xml2)
+
+      console.debug(newXMLString)
 
     }
     reader.readAsText(gpxFile)
