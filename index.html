@@ -21,8 +21,9 @@ MINIMAL AIMS:
 <form>
 <input type="file"> <!-- multiple="multiple" accept="image/jpg, ..." -->
 </form>
+<p>Right click the links and choose "Save link as"</p>
 
-<!-- Use Downloadify for the result files -->
+<!-- Maybe use Downloadify for the result files -->
 
 <script src="jquery.min.js"></script>
 <script type="text/javascript">
@@ -72,9 +73,14 @@ $(function(){
 
       // serialize out to new document
       var serializer = new XMLSerializer()
-      var newXMLString = serializer.serializeToString(xml2)
+      var newXMLString = serializer.serializeToString(xml)
 
-      console.debug(newXMLString)
+      href = "data:application/gpx+xml;base64,"+btoa(newXMLString) // base64 conversion
+      $('form').after("<a href='"+href+"' title='Part1.gpx' download='Part1.gpx'>Download Part 1</a>")
+
+      var newXMLString2 = serializer.serializeToString(xml2)
+      href = "data:application/gpx+xml;base64,"+btoa(newXMLString2) // base64 conversion
+      $('form').after("<a href='"+href+"' title='Part2.gpx' download='Part2.gpx'>Download Part 2</a>")
 
     }
     reader.readAsText(gpxFile)
