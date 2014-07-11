@@ -25,16 +25,19 @@ App = React.createClass({
       (h1 {}, "Strava Split")
       if not @state.xml? then (p {}, "Upload a gpx file") else null,
       if not @state.xml? then (form {}, (input {type:'file',onChange:@handleFile}) ) else null,
-      if @state.xml? then FileView(@state) else null,
+      if @state.xml? then GPXView(@state) else null,
       if @state.cutoff? then DownloadView(@state) else null
     ])
 })
 
-FileView = React.createClass({
+GPXView = React.createClass({
+  getInitialState: () -> {
+    dividerX : 300
+  }
   render: () ->
     # pre-process data
-    start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
-    end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
+    @start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
+    @end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
     data = {} # :: timestamp -> {lat,lon,ele,hr}
     trkpts = @props.xml.getElementsByTagName('trkpt')
     [maxEle, maxHR, maxTime] = [-Infinity, -Infinity, -Infinity] # TODO: maxTime & end are the same
@@ -42,7 +45,7 @@ FileView = React.createClass({
     for i in [0..trkpts.length-1]
       point = trkpts[i]
       timestamp = Date.parse(point.getElementsByTagName('time')[0].innerHTML)
-      data[timestamp - start] = {
+      data[timestamp - @start] = {
         lat: point.getAttribute('lat')
         lon: point.getAttribute('lon')
         ele: ele = point.getElementsByTagName('ele')[0].innerHTML
@@ -53,14 +56,39 @@ FileView = React.createClass({
       maxTime = Math.max maxTime, timestamp
 
     name = @props.xml.querySelector('name').innerHTML
-    return (div {className:'fileView'}, [
+
+    return (div {className:'GPXView'}, [
       (h1 {}, name),
-      (svg {height:100,width:600}, [
-        HRLine({maxTime:maxTime,maxHR:maxHR,start:start,data:data}),
-        EleView({maxTime:maxTime,maxEle:maxEle,start:start,data:data})
+      (svg {height:100,width:600,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
+        HRLine({maxTime:maxTime,maxHR:maxHR,start:@start,data:data}),
+        EleView({maxTime:maxTime,maxEle:maxEle,start:@start,data:data}),
+        Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
       ])
-      (p {}, start + " to " + end),
-      Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
+      (p {}, @start + " to " + @end),
+      Selector({start:@start,end:@end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
+    ])
+  handleMove: (e) ->
+    rect = @refs.svg.getDOMNode().getBoundingClientRect();
+    @setState(dividerX:e.clientX-rect.left)
+  handleLeave: (e) ->
+    @setState(dividerX:null)
+  onClick: (e) ->
+    console.log 'click'
+    c = @state.dividerX * (@end - @start) / 600 + @start
+    console.log c
+    @props.updateCutoff(c)
+ })
+
+Divider = React.createClass({
+  render: () ->
+    (g {}, [
+      if @props.cutoff?
+        cutoffX = (@props.cutoff - @props.start) * (600 / (@props.end - @props.start))
+        (path {d:"M #{cutoffX} 0 #{cutoffX} 100",stroke:'black'})
+      else null,
+      if @props.dividerX?
+        (path {d:"M #{@props.dividerX} 0 #{@props.dividerX} 100",stroke:'black'})
+      else null
     ])
 })
 
@@ -73,7 +101,7 @@ EleView = React.createClass({
 
     elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 600 0 Z"
     # final 'Z' tells the path to join up
-    return (g {}, (path {d:elePath,stroke:'none', fill:'grey',transform:"translate(0,100)"}))
+    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,100)"}, (path {d:elePath}))
 })
 
 HRLine = React.createClass({
@@ -87,7 +115,7 @@ HRLine = React.createClass({
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
-    return (g {}, (path {d:hrline,stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"}))
+    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"}, (path {d:hrline}))
 })
 
 Selector = React.createClass({
