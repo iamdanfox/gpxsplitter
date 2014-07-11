@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span} = React.DOM
+{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span,text} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -103,15 +103,17 @@ GPXView = React.createClass({
 
 Divider = React.createClass({
   render: () ->
-    (g {}, [
-      if @props.cutoff?
-        cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
-        (path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 250"})
-      else null,
-      if @props.dividerX?
-        (path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 250"})
-      else null
-    ])
+    elems =[]
+    if @props.cutoff?
+      cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
+      elems.push(path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 250"})
+    if @props.dividerX?
+      elems.push(React.DOM.rect {x:@props.dividerX, y:0, width:50, height:27, fill:'rgba(247,247,247,0.9)'} )
+      elems.push(path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 250"})
+      #compute time from pixels
+      c = @props.dividerX * (@props.end - @props.start) / 800
+      elems.push(text {x:@props.dividerX+10, y:17}, nicetime(c))
+    return (g {}, elems)
 })
 
 EleView = React.createClass({
@@ -179,20 +181,22 @@ DownloadLinks = React.createClass({
     ])
 })
 
+nicetime = (duration) ->
+  seconds = Math.floor(duration / 1000)
+  minutes = seconds / 60
+  hours = Math.floor(minutes / 60)
+  pad = (x) -> if x<10 then "0"+x else x
+  return (if hours>0 then hours+":" else "") + Math.floor(minutes)+":"+pad(seconds % 60)
+
 TinySummary = React.createClass({
   #props: xml
   render: () ->
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
     name = @props.xml.querySelector('name').innerHTML
-    duration = end-start
-    seconds = duration / 1000
-    minutes = seconds / 60
-
-    pad = (x) -> if x<10 then "0"+x else x
 
     (p {className:'tinySummary'}, [
-      (span {className:'duration'}, Math.floor(minutes)+":"+pad(seconds % 60)),
+      (span {className:'duration'}, nicetime(end - start)),
       (span {className:'label'}, "duration"),
       (a {href:@props.url,className:'dl',download:@props.filename}, "Download "+@props.filename)
     ])
