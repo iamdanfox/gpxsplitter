@@ -10,8 +10,19 @@ MINIMAL AIMS:
 4. Return valid GPX files.
 -->
 <style>
-.GPXView {border:1px solid black;padding:10px;}
-.downloadView {border:1px solid red;padding:10px;}
+html {height:100%;font-family:Helvetica Neue, sans-serif;font-size:90%;}
+body {background:#eee;}
+.app {background:white;width:602px;padding:30px;margin: 4em auto;}
+
+h1 {text-align:center;}
+
+.GPXView {}
+svg {border: 1px solid #aaa;border-top:0;}
+svg path.cutoff {stroke:black;stroke-width:1.5px;}
+svg path.cursor {stroke:rgba(0,0,0,0.8);stroke-width:1.5px;}
+
+.downloadView {background:rgba(0,0,255,0.1)}
+
 </style>
 
 <script src="react.js"></script>

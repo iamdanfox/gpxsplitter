@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,a,button,svg,rect,path,g} = React.DOM
+{div,form,input,p,h1,h2,a,button,svg,rect,path,g} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -21,7 +21,7 @@ App = React.createClass({
     @setState(cutoff:newCutoff)
 
   render: () ->
-    (div {}, [
+    (div {className:'app'}, [
       (h1 {}, "Strava Split")
       if not @state.xml? then (p {}, "Upload a gpx file") else null,
       if not @state.xml? then (form {}, (input {type:'file',onChange:@handleFile}) ) else null,
@@ -58,14 +58,12 @@ GPXView = React.createClass({
     name = @props.xml.querySelector('name').innerHTML
 
     return (div {className:'GPXView'}, [
-      (h1 {}, name),
+      (h2 {}, name),
       (svg {height:100,width:600,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
         HRLine({maxTime:maxTime,maxHR:maxHR,start:@start,data:data}),
         EleView({maxTime:maxTime,maxEle:maxEle,start:@start,data:data}),
         Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
       ])
-      (p {}, @start + " to " + @end),
-      Selector({start:@start,end:@end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
     ])
   handleMove: (e) ->
     rect = @refs.svg.getDOMNode().getBoundingClientRect();
@@ -73,9 +71,7 @@ GPXView = React.createClass({
   handleLeave: (e) ->
     @setState(dividerX:null)
   onClick: (e) ->
-    console.log 'click'
     c = @state.dividerX * (@end - @start) / 600 + @start
-    console.log c
     @props.updateCutoff(c)
  })
 
@@ -84,10 +80,10 @@ Divider = React.createClass({
     (g {}, [
       if @props.cutoff?
         cutoffX = (@props.cutoff - @props.start) * (600 / (@props.end - @props.start))
-        (path {d:"M #{cutoffX} 0 #{cutoffX} 100",stroke:'black'})
+        (path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 100"})
       else null,
       if @props.dividerX?
-        (path {d:"M #{@props.dividerX} 0 #{@props.dividerX} 100",stroke:'black'})
+        (path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 100"})
       else null
     ])
 })
@@ -116,24 +112,6 @@ HRLine = React.createClass({
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
     return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"}, (path {d:hrline}))
-})
-
-Selector = React.createClass({
-  getInitialState:() -> {
-      value:(@props.start + @props.end)/2
-    }
-  handleChange: () ->
-    val = @refs.slider.getDOMNode().value
-    @props.updateCutoff(val)
-  render: () ->
-    (input {
-      type:'range',
-      min:@props.start,
-      max:@props.end,
-      defaultValue:@props.cutoff,
-      ref:'slider',
-      onChange:@handleChange
-    })
 })
 
 DownloadView = React.createClass({
