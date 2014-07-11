@@ -44,7 +44,6 @@ App = React.createClass({
 FileView = React.createClass({
   render: function() {
     var data, ele, end, hr, i, maxEle, maxHR, maxTime, name, point, start, timestamp, trkpts, _i, _ref1, _ref2;
-    name = this.props.xml.querySelector('name').innerHTML;
     start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     data = {};
@@ -63,6 +62,7 @@ FileView = React.createClass({
       maxHR = Math.max(maxHR, hr);
       maxTime = Math.max(maxTime, timestamp);
     }
+    name = this.props.xml.querySelector('name').innerHTML;
     return div({
       className: 'fileView'
     }, [
@@ -75,7 +75,12 @@ FileView = React.createClass({
           maxHR: maxHR,
           start: start,
           data: data
-        }), EleView(this.props)
+        }), EleView({
+          maxTime: maxTime,
+          maxEle: maxEle,
+          start: start,
+          data: data
+        })
       ]), p({}, start + " to " + end), Selector({
         start: start,
         end: end,
@@ -88,22 +93,26 @@ FileView = React.createClass({
 
 EleView = React.createClass({
   render: function() {
-    var allpoints, bars, barwidth, h, i, _i, _ref1;
-    bars = [];
-    allpoints = this.props.xml.getElementsByTagName('ele');
-    barwidth = 600 / allpoints.length;
-    for (i = _i = 0, _ref1 = allpoints.length - 1; 0 <= _ref1 ? _i <= _ref1 : _i >= _ref1; i = 0 <= _ref1 ? ++_i : --_i) {
-      h = allpoints[i].innerHTML;
-      bars.push(rect({
-        height: h,
-        width: barwidth,
-        x: i * barwidth,
-        y: 100 - h,
-        fill: 'black',
-        stroke: 'none'
-      }));
-    }
-    return g({}, bars);
+    var duration, elePath, obj, sfx, sfy, t;
+    duration = this.props.maxTime - this.props.start;
+    sfx = 600 / duration;
+    sfy = this.props.maxEle > 100 ? 100 / this.props.maxEle : 1;
+    elePath = ("M 0 " + this.props.data[0].ele + " L ") + ((function() {
+      var _ref1, _results;
+      _ref1 = this.props.data;
+      _results = [];
+      for (t in _ref1) {
+        obj = _ref1[t];
+        _results.push(t * sfx + " " + obj.ele * -sfy);
+      }
+      return _results;
+    }).call(this)).join(' ') + " 600 0 Z";
+    return g({}, path({
+      d: elePath,
+      stroke: 'none',
+      fill: 'grey',
+      transform: "translate(0,100)"
+    }));
   }
 });
 

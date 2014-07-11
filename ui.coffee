@@ -32,14 +32,12 @@ App = React.createClass({
 
 FileView = React.createClass({
   render: () ->
-    name = @props.xml.querySelector('name').innerHTML
+    # pre-process data
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
-
-    # pre-process data
     data = {} # :: timestamp -> {lat,lon,ele,hr}
     trkpts = @props.xml.getElementsByTagName('trkpt')
-    [maxEle, maxHR, maxTime] = [-Infinity, -Infinity, -Infinity]
+    [maxEle, maxHR, maxTime] = [-Infinity, -Infinity, -Infinity] # TODO: maxTime & end are the same
 
     for i in [0..trkpts.length-1]
       point = trkpts[i]
@@ -54,11 +52,12 @@ FileView = React.createClass({
       maxHR = Math.max maxHR, hr
       maxTime = Math.max maxTime, timestamp
 
+    name = @props.xml.querySelector('name').innerHTML
     return (div {className:'fileView'}, [
       (h1 {}, name),
       (svg {height:100,width:600}, [
         HRLine({maxTime:maxTime,maxHR:maxHR,start:start,data:data}),
-        EleView(@props)
+        EleView({maxTime:maxTime,maxEle:maxEle,start:start,data:data})
       ])
       (p {}, start + " to " + end),
       Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
@@ -66,17 +65,15 @@ FileView = React.createClass({
 })
 
 EleView = React.createClass({
-  #props:
+  #props: maxTime, maxEle, start, data
   render: () ->
-    # elevation bar chart - TODO switch to line / region? - TODO switch to use timestamp on x axis!
-    bars = []
-    allpoints = @props.xml.getElementsByTagName('ele')
-    barwidth = 600 / allpoints.length
-    for i in [0..allpoints.length-1]
-      h = allpoints[i].innerHTML
-      bars.push( rect {height:h,width:barwidth,x:i*barwidth,y:100-h,fill:'black',stroke:'none'} )
+    duration = @props.maxTime - @props.start
+    sfx = 600 / duration
+    sfy = if @props.maxEle > 100 then 100 / @props.maxEle else 1
 
-    return (g {}, bars)
+    elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 600 0 Z"
+    # final 'Z' tells the path to join up
+    return (g {}, (path {d:elePath,stroke:'none', fill:'grey',transform:"translate(0,100)"}))
 })
 
 HRLine = React.createClass({
@@ -85,8 +82,8 @@ HRLine = React.createClass({
     duration = @props.maxTime - @props.start
     sfx = 600 / duration
     sfy = 100 / @props.maxHR
+
     hrline = "M 0 "+@props.data[0].hr+" L"
-    # HR line # TODO check maxHR
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
