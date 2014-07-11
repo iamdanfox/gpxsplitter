@@ -78,22 +78,34 @@ DownloadView = React.createClass({
 
 DownloadLinks = React.createClass({
   render: () ->
-    xml = @props.xml
-    xml2 = xml.cloneNode(true)
+    xml1 = @props.xml
+    xml2 = xml1.cloneNode(true)
 
     # do chopping
-    [].forEach.call( xml.querySelectorAll('time'), (t) =>
+    [].forEach.call( xml1.querySelectorAll('trkseg time'), (t) =>
       if Date.parse(t.innerHTML) >= @props.cutoff
         t.parentNode.remove() # chops out a trkpt
     )
-    [].forEach.call( xml2.querySelectorAll('time'), (t) =>
+    xml1.querySelector('trk name').innerHTML += " (part 1)"
+
+    [].forEach.call( xml2.querySelectorAll('trkseg time'), (t) =>
       if Date.parse(t.innerHTML) < @props.cutoff
         t.parentNode.remove() # chops out a trkpt
     )
+    xml2.querySelector('trk name').innerHTML += " (part 2)"
+    firstTime = xml2.querySelector('trk time').innerHTML
+    xml2.querySelector('metadata time').innerHTML = firstTime
 
     # do serializing
-    href1 = "http://google.com"
-    href2 = "http://google.co.uk"
+    serializer = new XMLSerializer()
+
+    newXMLString1 = serializer.serializeToString(xml1)
+    href1 = "data:application/gpx+xml;base64,"+btoa(newXMLString1)
+
+    newXMLString2 = serializer.serializeToString(xml2)
+    newXMLString2 = """<?xml version="1.0" encoding="UTF-8"?>\n""" + newXMLString2
+    href2 = "data:application/gpx+xml;base64,"+btoa(newXMLString2)
+
     (div {},[
       (p {}, "Right click and select 'Save link as'"),
       (a {href:href1}, "Download Part 1"),

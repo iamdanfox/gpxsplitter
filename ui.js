@@ -106,25 +106,33 @@ DownloadView = React.createClass({
 
 DownloadLinks = React.createClass({
   render: function() {
-    var href1, href2, xml, xml2;
-    xml = this.props.xml;
-    xml2 = xml.cloneNode(true);
-    [].forEach.call(xml.querySelectorAll('time'), (function(_this) {
+    var firstTime, href1, href2, newXMLString1, newXMLString2, serializer, xml1, xml2;
+    xml1 = this.props.xml;
+    xml2 = xml1.cloneNode(true);
+    [].forEach.call(xml1.querySelectorAll('trkseg time'), (function(_this) {
       return function(t) {
         if (Date.parse(t.innerHTML) >= _this.props.cutoff) {
           return t.parentNode.remove();
         }
       };
     })(this));
-    [].forEach.call(xml2.querySelectorAll('time'), (function(_this) {
+    xml1.querySelector('trk name').innerHTML += " (part 1)";
+    [].forEach.call(xml2.querySelectorAll('trkseg time'), (function(_this) {
       return function(t) {
         if (Date.parse(t.innerHTML) < _this.props.cutoff) {
           return t.parentNode.remove();
         }
       };
     })(this));
-    href1 = "http://google.com";
-    href2 = "http://google.co.uk";
+    xml2.querySelector('trk name').innerHTML += " (part 2)";
+    firstTime = xml2.querySelector('trk time').innerHTML;
+    xml2.querySelector('metadata time').innerHTML = firstTime;
+    serializer = new XMLSerializer();
+    newXMLString1 = serializer.serializeToString(xml1);
+    href1 = "data:application/gpx+xml;base64," + btoa(newXMLString1);
+    newXMLString2 = serializer.serializeToString(xml2);
+    newXMLString2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + newXMLString2;
+    href2 = "data:application/gpx+xml;base64," + btoa(newXMLString2);
     return div({}, [
       p({}, "Right click and select 'Save link as'"), a({
         href: href1
