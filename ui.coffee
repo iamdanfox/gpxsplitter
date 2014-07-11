@@ -22,6 +22,7 @@ App = React.createClass({
 
   render: () ->
     (div {}, [
+      (h1 {}, "Strava Split")
       (p {}, "Upload a gpx file"),
       (form {}, (input {type:'file',onChange:@handleFile}) ),
       if @state.xml? then FileView(@state) else null,
