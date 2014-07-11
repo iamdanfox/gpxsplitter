@@ -140,8 +140,15 @@ GPXView = React.createClass({
           cutoff: this.props.cutoff,
           dividerX: this.state.dividerX
         })
-      ])
+      ]), this.props.cutoff == null ? p(null, "Click above to split your activity.") : void 0, this.props.cutoff == null ? p(null, a({
+        href: '#',
+        onClick: this.startAgain
+      }, "back")) : void 0
     ]);
+  },
+  startAgain: function() {
+    this.props.updateCutoff(null);
+    return this.props.updateXML(null);
   },
   handleMove: function(e) {
     rect = this.refs.svg.getDOMNode().getBoundingClientRect();
@@ -244,6 +251,11 @@ HRLine = React.createClass({
 });
 
 DownloadLinks = React.createClass({
+  getInitialState: function() {
+    return {
+      downloadedForCutoff: null
+    };
+  },
   render: function() {
     var blob1, blob2, firstTime, newXMLString1, newXMLString2, serializer, url1, url2, xml1, xml2;
     xml1 = this.props.xml.cloneNode(true);
@@ -280,13 +292,30 @@ DownloadLinks = React.createClass({
       TinySummary({
         xml: xml1,
         url: url1,
-        filename: 'part1.gpx'
+        filename: 'part1.gpx',
+        handleClick: this.handleClick
       }), " ", TinySummary({
         xml: xml2,
         url: url2,
-        filename: 'part2.gpx'
-      })
+        filename: 'part2.gpx',
+        handleClick: this.handleClick
+      }), this.state.downloadedForCutoff === this.props.cutoff ? p(null, "You can now ", a({
+        href: 'http://www.strava.com/upload/select',
+        target: '_blank'
+      }, "upload these files to Strava"), " or ", a({
+        href: '#',
+        onClick: this.startAgain
+      }, "start again"), ".") : void 0, this.state.downloadedForCutoff === this.props.cutoff ? p(null, "Don't forget to delete the old activity!") : void 0
     ]);
+  },
+  handleClick: function() {
+    return this.setState({
+      downloadedForCutoff: this.props.cutoff
+    });
+  },
+  startAgain: function() {
+    this.props.updateCutoff(null);
+    return this.props.updateXML(null);
   }
 });
 
@@ -321,7 +350,8 @@ TinySummary = React.createClass({
       }, "duration"), a({
         href: this.props.url,
         className: 'dl',
-        download: this.props.filename
+        download: this.props.filename,
+        onClick: this.props.handleClick
       }, "Download " + this.props.filename)
     ]);
   }
@@ -331,7 +361,7 @@ Blurb = React.createClass({
   render: function() {
     return div({
       className: 'blurb'
-    }, p(null, em(null, "Use this tool to split Strava activities into separate parts.")), p(null, "For example, if you've just done a triathlon, you might want to analyse each\nphase as a separate activity."), p(null, "You'll need to export the GPX file from your Strava activity - click the wrench icon. You can then split it up and then upload the two parts.  Don't forget to delete the original activity from Strava to prevent duplicates!"));
+    }, p(null, em(null, "Use this tool to split Strava activities into separate parts.")), p(null, "For example, if you've just done a triathlon, you might want to analyse each\nphase as a separate activity."), p(null, "You'll need to export the GPX file from your Strava activity - click the wrench icon. You can then split it up and then upload the two parts.  "));
   }
 });
 

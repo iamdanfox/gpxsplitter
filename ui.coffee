@@ -20,7 +20,7 @@ App = React.createClass({
       FileInput(@state) if not @state.xml?
       Blurb() if not @state.xml?
       GPXView(@state) if @state.xml?
-      DownloadLinks(@state) if @state.cutoff?
+      if @state.cutoff? then DownloadLinks(@state)
       Footer()
     ])
 })
@@ -91,13 +91,24 @@ GPXView = React.createClass({
         if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
         EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})
         Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
-      ])
+      ]),
+      if not @props.cutoff?
+        (p null, "Click above to split your activity.")
+      if not @props.cutoff?
+        (p null, (a {href:'#',onClick:@startAgain}, "back"))
     ])
+
+  startAgain: () ->
+    @props.updateCutoff(null)
+    @props.updateXML(null)
+
   handleMove: (e) ->
     rect = @refs.svg.getDOMNode().getBoundingClientRect();
     @setState(dividerX:e.clientX-rect.left)
+
   handleLeave: (e) ->
     @setState(dividerX:null)
+
   onClick: (e) ->
     c = @state.dividerX * (@end - @start) / 800 + @start
     @props.updateCutoff(c)
@@ -145,6 +156,9 @@ HRLine = React.createClass({
 })
 
 DownloadLinks = React.createClass({
+  getInitialState: () ->
+    downloadedForCutoff: null
+
   render: () ->
     xml1 = @props.xml.cloneNode(true)
     xml2 = @props.xml.cloneNode(true)
@@ -177,10 +191,22 @@ DownloadLinks = React.createClass({
     url2 = window.URL.createObjectURL(blob2)
 
     (div {className:'downloadLinks'},[
-      TinySummary(xml:xml1,url:url1,filename:'part1.gpx')
+      TinySummary(xml:xml1,url:url1,filename:'part1.gpx',handleClick:@handleClick)
       " ",
-      TinySummary(xml:xml2,url:url2,filename:'part2.gpx')
+      TinySummary(xml:xml2,url:url2,filename:'part2.gpx',handleClick:@handleClick)
+      if @state.downloadedForCutoff is @props.cutoff
+        (p null,
+          "You can now ", (a {href:'http://www.strava.com/upload/select',target:'_blank'},
+          "upload these files to Strava"), " or ",
+          (a {href:'#',onClick:@startAgain}, "start again"), ".")
+      if @state.downloadedForCutoff is @props.cutoff
+        (p null, "Don't forget to delete the old activity!")
     ])
+
+  handleClick: () -> @setState(downloadedForCutoff:@props.cutoff)
+  startAgain: () ->
+    @props.updateCutoff(null)
+    @props.updateXML(null)
 })
 
 nicetime = (duration) ->
@@ -200,7 +226,7 @@ TinySummary = React.createClass({
     (p {className:'tinySummary'}, [
       (span {className:'duration'}, nicetime(end - start)),
       (span {className:'label'}, "duration"),
-      (a {href:@props.url,className:'dl',download:@props.filename}, "Download "+@props.filename)
+      (a {href:@props.url,className:'dl',download:@props.filename, onClick:@props.handleClick}, "Download "+@props.filename)
     ])
 })
 
@@ -211,8 +237,7 @@ Blurb = React.createClass({
       For example, if you've just done a triathlon, you might want to analyse each
       phase as a separate activity."""),
     (p null, "You'll need to export the GPX file from your Strava activity -
-    click the wrench icon. You can then split it up and then upload the two parts.  Don't
-    forget to delete the original activity from Strava to prevent duplicates!"))
+    click the wrench icon. You can then split it up and then upload the two parts.  "))
 })
 
 Footer = React.createClass({
