@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,h2,a,button,svg,rect,path,g} = React.DOM
+{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -31,7 +31,6 @@ App = React.createClass({
 })
 
 
-# TODO: recale to 250 x 800
 GPXView = React.createClass({
   getInitialState: () -> {
     dividerX : 300
@@ -149,8 +148,27 @@ DownloadLinks = React.createClass({
     url2 = window.URL.createObjectURL(blob2)
 
     (div {className:'downloadLinks'},[
-      (a {href:url1,download:'part1.gpx'}, "Download part1.gpx"),
+      TinySummary(xml:xml1,url:url1,filename:'part1.gpx')
       " ",
-      (a {href:url2,download:'part2.gpx'}, "Download part2.gpx")
+      TinySummary(xml:xml2,url:url2,filename:'part2.gpx')
+    ])
+})
+
+TinySummary = React.createClass({
+  #props: xml
+  render: () ->
+    start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
+    end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
+    name = @props.xml.querySelector('name').innerHTML
+    duration = end-start
+    seconds = duration / 1000
+    minutes = seconds / 60
+
+    pad = (x) -> if x<10 then "0"+x else x
+
+    (p {className:'tinySummary'}, [
+      (span {className:'duration'}, Math.floor(minutes)+":"+pad(seconds % 60)),
+      (span {className:'label'}, "duration"),
+      (a {href:@props.url,className:'dl',download:@props.filename}, "Download "+@props.filename)
     ])
 })

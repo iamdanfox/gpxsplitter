@@ -2,29 +2,28 @@
 <html>
 <head>
 <title>Strava Split</title>
-<!--
-MINIMAL AIMS:
-1. upload a GPX file and parse it
-2. Summarise / visualise file.
-3. Allow user to choose a split point
-4. Return valid GPX files.
--->
 <style>
 html {height:100%;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:90%;}
 body {background:#eee;color:rgb(51, 51, 51);}
-.app {background:white;width:802px;padding:30px;margin: 4em auto;}
+.app {background-color: rgb(247, 247, 247);width:802px;padding:30px;margin: 4em auto;
+  -webkit-box-shadow:0 0 0.5px 0.5px #ccc;}
 
-h1 {text-align:center;}
+h1 {text-align:center;font-weight:normal}
 
 .GPXView {}
+h2 {font-weight:normal;}
 svg {border: 1px solid #aaa;border-top:0;}
 svg path.cutoff {stroke:black;stroke-width:1.5px;}
 svg path.cursor {stroke:rgba(0,0,0,0.8);stroke-width:1.5px;}
 
 .downloadLinks {padding:30px;text-align:Center;}
-.downloadLinks a {padding:7px 10px; background:#fc4c02;color:white;text-decoration:none;margin:0 10px;}
+.downloadLinks a.dl {padding:7px 10px; background:#fc4c02;color:#fff;text-decoration:none;margin:7px 10px;}
 .downloadLinks a:hover {background-color:#e34402;}
-.downloadLinks a:visited {text-decoration: line-through;}
+.downloadLinks a:visited {text-decoration: line-through !important;}
+
+.tinySummary {background: white;padding: 10px 10px 20px 10px;display: inline-block;-webkit-box-shadow:0 0 0.5px 0.5px #ccc;}
+.tinySummary .duration {font-size:28px;display:block;}
+.tinySummary .label {color: rgb(153, 153, 153);display:block;margin-bottom:20px;}
 </style>
 
 <script src="react.js"></script>
