@@ -1,22 +1,24 @@
 <!doctype html>
 <html>
 <head>
-<title>Strava Split</title>
+<title>GPX Splitter</title>
 <style>
 html {height:100%;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:90%;}
 body {background:#eee;color:rgb(51, 51, 51);}
-.app {background-color: rgb(247, 247, 247);width:802px;padding:30px;margin: 4em auto;
-  -webkit-box-shadow:0 0 0.5px 0.5px #ccc;}
+.app {background-color: rgb(247, 247, 247);width:802px;padding:30px;margin: 4em auto 6em auto;
+  -webkit-box-shadow:0 0 0.5px 0.5px #ccc;position:relative;}
 
 h1 {text-align:center;font-weight:normal}
 
-.fileInput {padding: 10px;width: 500px;margin: 0 auto;background: #fdfdfd;
+.fileInput {padding: 10px;width: 500px;margin: 50px auto;background: #fdfdfd;
   -webkit-transition:all 300ms;-webkit-box-shadow:inset 0 0 2px 2px rgba(100,100,100,0.1);border:1px solid #ccc;}
 .fileInput.over {background:#fff;border-color:#fc4c02;}
 .fileInput p {padding:5%;width:40%;display:inline-block;vertical-align:middle;-webkit-transition:all 300ms;}
 .fileInput p:first-child {font-weight:bold;text-align:right;height:100%;}
 .fileInput p:nth-child(2) {border-left:1px solid #bbb;margin-left:-1px;}
 .fileInput.over p:nth-child(2) {pointer-events:none;opacity:0.1;}
+
+.blurb {line-height:1.5em;width:500px;margin:0 auto;}
 
 h2 {font-weight:normal;}
 svg {border: 1px solid #aaa;border-top:0;cursor:pointer;}
@@ -31,6 +33,10 @@ svg path.cursor {stroke:rgba(0,0,0,0.8);stroke-width:1.5px;}
 .tinySummary {background: white;padding: 10px 10px 20px 10px;display: inline-block;-webkit-box-shadow:0 0 0.5px 0.5px #ccc;}
 .tinySummary .duration {font-size:28px;display:block;}
 .tinySummary .label {color: rgb(153, 153, 153);display:block;margin-bottom:20px;}
+
+.footer {width:100%;text-align:center;opacity:0.2;font-size:21px;position:absolute;left:0;top:100%;font-weight:200;-webkit-transition:all 300ms;}
+.footer a {color: #0074D9;}
+.footer:hover {opacity:1;}
 </style>
 
 <script src="react.js"></script>

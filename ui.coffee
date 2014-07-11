@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span,text} = React.DOM
+{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span,text,em} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -16,10 +16,12 @@ App = React.createClass({
 
   render: () ->
     (div {className:'app'}, [
-      (h1 {}, "Strava Split")
+      (h1 {}, "GPX Splitter")
       FileInput(@state) if not @state.xml?
+      Blurb() if not @state.xml?
       GPXView(@state) if @state.xml?
       DownloadLinks(@state) if @state.cutoff?
+      Footer()
     ])
 })
 
@@ -200,4 +202,20 @@ TinySummary = React.createClass({
       (span {className:'label'}, "duration"),
       (a {href:@props.url,className:'dl',download:@props.filename}, "Download "+@props.filename)
     ])
+})
+
+Blurb = React.createClass({
+  render: () ->
+    (div {className:'blurb'}, (p null, (em null, "Use this tool to split Strava
+      activities into separate parts.")), (p null, """
+      For example, if you've just done a triathlon, you might want to analyse each
+      phase as a separate activity."""),
+    (p null, "You'll need to export the GPX file from your Strava activity -
+    click the wrench icon. You can then split it up and then upload the two parts.  Don't
+    forget to delete the original activity from Strava to prevent duplicates!"))
+})
+
+Footer = React.createClass({
+  render: () ->
+    (p {className:'footer'}, "made for fun by ", (a {href:'http://github.com/iamdanfox/gpxsplitter'}, "iamdanfox"))
 })
