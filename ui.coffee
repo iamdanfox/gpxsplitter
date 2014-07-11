@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,a,button} = React.DOM
+{div,form,input,p,h1,a,button,svg,rect} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -35,8 +35,20 @@ FileView = React.createClass({
     name = @props.xml.querySelector('name').innerHTML
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
-    (div {className:'fileView'}, [
+
+    # elevation bar chart - TODO switch to line / region?
+    bars = []
+    allpoints = @props.xml.getElementsByTagName('ele')
+    barwidth = 600 / allpoints.length
+    for i in [0..allpoints.length-1]
+      h = allpoints[i].innerHTML
+      bars.push( rect {height:h,width:barwidth,x:i*barwidth,y:100-h,fill:'black',stroke:'none'} )
+
+    # TODO heartrate line
+
+    return (div {className:'fileView'}, [
       (h1 {}, name),
+      (svg {height:100,width:600}, bars)
       (p {}, start + " to " + end),
       Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
     ])
