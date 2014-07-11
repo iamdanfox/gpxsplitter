@@ -66,7 +66,8 @@ GPXView = React.createClass({
     @end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
     data = {} # :: timestamp -> {lat,lon,ele,hr}
     trkpts = @props.xml.getElementsByTagName('trkpt')
-    [maxEle, maxHR, maxTime] = [-Infinity, -Infinity, -Infinity] # TODO: maxTime & end are the same
+    [maxEle, maxHR] = [-Infinity, -Infinity]
+
 
     for i in [0..trkpts.length-1]
       point = trkpts[i]
@@ -75,19 +76,18 @@ GPXView = React.createClass({
         lat: point.getAttribute('lat')
         lon: point.getAttribute('lon')
         ele: ele = point.getElementsByTagName('ele')[0].innerHTML
-        hr: hr = point.getElementsByTagName('hr')[0].innerHTML
+        hr: hr = point.getElementsByTagName('hr')[0]?.innerHTML
       }
       maxEle = Math.max maxEle, ele
       maxHR = Math.max maxHR, hr
-      maxTime = Math.max maxTime, timestamp
 
     name = @props.xml.querySelector('name').innerHTML
 
     return (div {className:'GPXView'}, [
       (h2 {}, name),
       (svg {height:250,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
-        HRLine({maxTime:maxTime,maxHR:maxHR,start:@start,data:data}),
-        EleView({maxTime:maxTime,maxEle:maxEle,start:@start,data:data}),
+        if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
+        EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})
         Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
       ])
     ])

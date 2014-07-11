@@ -94,12 +94,12 @@ GPXView = React.createClass({
     };
   },
   render: function() {
-    var data, ele, hr, i, maxEle, maxHR, maxTime, name, point, timestamp, trkpts, _i, _ref1, _ref2;
+    var data, ele, hr, i, maxEle, maxHR, name, point, timestamp, trkpts, _i, _ref1, _ref2, _ref3;
     this.start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     this.end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     data = {};
     trkpts = this.props.xml.getElementsByTagName('trkpt');
-    _ref1 = [-Infinity, -Infinity, -Infinity], maxEle = _ref1[0], maxHR = _ref1[1], maxTime = _ref1[2];
+    _ref1 = [-Infinity, -Infinity], maxEle = _ref1[0], maxHR = _ref1[1];
     for (i = _i = 0, _ref2 = trkpts.length - 1; 0 <= _ref2 ? _i <= _ref2 : _i >= _ref2; i = 0 <= _ref2 ? ++_i : --_i) {
       point = trkpts[i];
       timestamp = Date.parse(point.getElementsByTagName('time')[0].innerHTML);
@@ -107,11 +107,10 @@ GPXView = React.createClass({
         lat: point.getAttribute('lat'),
         lon: point.getAttribute('lon'),
         ele: ele = point.getElementsByTagName('ele')[0].innerHTML,
-        hr: hr = point.getElementsByTagName('hr')[0].innerHTML
+        hr: hr = (_ref3 = point.getElementsByTagName('hr')[0]) != null ? _ref3.innerHTML : void 0
       };
       maxEle = Math.max(maxEle, ele);
       maxHR = Math.max(maxHR, hr);
-      maxTime = Math.max(maxTime, timestamp);
     }
     name = this.props.xml.querySelector('name').innerHTML;
     return div({
@@ -125,13 +124,13 @@ GPXView = React.createClass({
         onClick: this.onClick,
         ref: 'svg'
       }, [
-        HRLine({
-          maxTime: maxTime,
+        !isNaN(maxHR) ? HRLine({
+          maxTime: this.end,
           maxHR: maxHR,
           start: this.start,
           data: data
-        }), EleView({
-          maxTime: maxTime,
+        }) : void 0, EleView({
+          maxTime: this.end,
           maxEle: maxEle,
           start: this.start,
           data: data
