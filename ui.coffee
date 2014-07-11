@@ -3,33 +3,43 @@
 
 App = React.createClass({
   getInitialState: () -> {
-    xml:        null
-    cutoff:     null
+    xml:          null
+    cutoff:       null
     updateCutoff: @updateCutoff
+    updateXML:    @updateXML
   }
 
+  updateCutoff: (newCutoff) ->
+    @setState(cutoff:newCutoff)
+
+  updateXML: (xml) ->
+    console.log 'updateXML', xml
+    @setState(xml:xml)
+
+  render: () ->
+    (div {className:'app'}, [
+      (h1 {}, "Strava Split")
+      FileInput(@state) if not @state.xml?
+      GPXView(@state) if @state.xml?
+      DownloadLinks(@state) if @state.cutoff?
+    ])
+})
+
+FileInput = React.createClass({
   handleFile: (e) ->
     reader = new FileReader()
     reader.onload = (evt) =>
       parser = new DOMParser()
       xml = parser.parseFromString(evt.target.result, 'text/xml')
-      @setState(xml:xml)
-
+      @props.updateXML(xml)
     reader.readAsText(e.target.files[0])
 
-  updateCutoff: (newCutoff) ->
-    @setState(cutoff:newCutoff)
-
   render: () ->
-    (div {className:'app'}, [
-      (h1 {}, "Strava Split")
-      if not @state.xml? then (p {}, "Upload a gpx file") else null,
-      if not @state.xml? then (form {}, (input {type:'file',onChange:@handleFile}) ) else null,
-      if @state.xml? then GPXView(@state) else null,
-      if @state.cutoff? then DownloadLinks(@state) else null
+    (div {className:'fileInput'},[
+      (p {}, "Upload a gpx file"),
+      (form {}, (input {type:'file',onChange:@handleFile}) )
     ])
 })
-
 
 GPXView = React.createClass({
   getInitialState: () -> {
