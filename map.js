@@ -1,3 +1,6 @@
+/*
+ * Based on @matnel's work.
+ */
 "use strict";
 
 var __in_node = (typeof exports !== 'undefined' && this.exports !== exports);
