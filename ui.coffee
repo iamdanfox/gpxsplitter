@@ -54,7 +54,20 @@ FileView = React.createClass({
       maxHR = Math.max maxHR, hr
       maxTime = Math.max maxTime, timestamp
 
+    return (div {className:'fileView'}, [
+      (h1 {}, name),
+      (svg {height:100,width:600}, [
+        HRLine({maxTime:maxTime,maxHR:maxHR,start:start,data:data}),
+        EleView(@props)
+      ])
+      (p {}, start + " to " + end),
+      Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
+    ])
+})
 
+EleView = React.createClass({
+  #props:
+  render: () ->
     # elevation bar chart - TODO switch to line / region? - TODO switch to use timestamp on x axis!
     bars = []
     allpoints = @props.xml.getElementsByTagName('ele')
@@ -63,15 +76,7 @@ FileView = React.createClass({
       h = allpoints[i].innerHTML
       bars.push( rect {height:h,width:barwidth,x:i*barwidth,y:100-h,fill:'black',stroke:'none'} )
 
-    return (div {className:'fileView'}, [
-      (h1 {}, name),
-      (svg {height:100,width:600}, [
-        (g {}, HRLine({maxTime:maxTime,maxHR:maxHR,start:start,data:data})),
-        (g {}, bars)
-      ])
-      (p {}, start + " to " + end),
-      Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
-    ])
+    return (g {}, bars)
 })
 
 HRLine = React.createClass({
@@ -85,7 +90,7 @@ HRLine = React.createClass({
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
-    return (path {d:hrline,stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"})
+    return (g {}, (path {d:hrline,stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"}))
 })
 
 Selector = React.createClass({
