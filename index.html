@@ -1,92 +1,28 @@
 <!doctype html>
-<html dl>
+<html>
 <head>
 <title>Strava Split</title>
-<style>
-</style>
-</head>
-<body>
-<h1>Strava Split</h1>
 <!--
-
 MINIMAL AIMS:
 1. upload a GPX file and parse it
 2. Summarise / visualise file.
 3. Allow user to choose a split point
 4. Return valid GPX files.
-
-
 -->
-<p>Upload a .gpx file</p>
-<form>
-<input type="file"> <!-- multiple="multiple" accept="image/jpg, ..." -->
-</form>
-<p>Right click the links and choose "Save link as"</p>
+<style>
+.fileView {border:1px solid black;padding:10px;}
+.downloadView {border:1px solid red;padding:10px;}
+</style>
 
-<!-- Maybe use Downloadify for the result files -->
+<script src="react.js"></script>
+<script src="ui.js"></script>
 
-<script src="jquery.min.js"></script>
+</head>
+<body>
+
 <script type="text/javascript">
-$(function(){
-  // Check for the various File API support.
-  if (window.File && window.FileReader && window.FileList && window.Blob) {
-    // Great success! All the File APIs are supported.
-  } else {
-    console.error('The File APIs are not fully supported in this browser.');
-  }
-
-  // gpx type seems to be `application/gpx+xml`
-
-  $("input[type='file']").change(function(e){
-    // uploading stuff based on http://www.html5rocks.com/en/tutorials/file/dndfiles/
-    var gpxFile = e.target.files[0]
-    // TODO listen to 'drop' event.  `e.dataTransfer.files` and `e.dataTransfer.dropEffect = 'copy'`
-    console.log(gpxFile.name)
-
-    var reader = new FileReader()
-    reader.onload = function(e) {
-      var xmlString = e.target.result
-
-      // based on http://stackoverflow.com/questions/17604071/parse-xml-using-javascript
-      var parser = new DOMParser()
-      var xml = parser.parseFromString(xmlString, 'text/xml')
-      var xml2 = parser.parseFromString(xmlString, 'text/xml') // TODO clone instead
-
-      // Split the "gpx trk trkseg" into multiple parts
-      var trkpts = xml.getElementsByTagName('trkpt')
-      var trkpts2 = xml2.getElementsByTagName('trkpt')
-
-      // TODO iterate through trkpts, remove some of them.
-
-      var cutoff = 30;
-      var len = trkpts.length
-      // do some removing
-      for (var i=0;i<len;i++)  {
-        if(i<cutoff)
-          trkpts[0].remove() // will end up with the second half
-        else
-          trkpts2[cutoff].remove()
-      }
-
-      console.log(trkpts.length, trkpts2.length)
-
-
-      // serialize out to new document
-      var serializer = new XMLSerializer()
-      var newXMLString = serializer.serializeToString(xml)
-
-      href = "data:application/gpx+xml;base64,"+btoa(newXMLString) // base64 conversion
-      $('form').after("<a href='"+href+"' title='Part1.gpx' download='Part1.gpx'>Download Part 1</a>")
-
-      var newXMLString2 = serializer.serializeToString(xml2)
-      href = "data:application/gpx+xml;base64,"+btoa(newXMLString2) // base64 conversion
-      $('form').after("<a href='"+href+"' title='Part2.gpx' download='Part2.gpx'>Download Part 2</a>")
-
-    }
-    reader.readAsText(gpxFile)
-  })
-
-})
+  React.renderComponent( App(), document.getElementsByTagName('body')[0])
 </script>
+
 </body>
 </html>
