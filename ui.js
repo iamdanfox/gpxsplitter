@@ -31,8 +31,14 @@ App = React.createClass({
 });
 
 FileInput = React.createClass({
+  getInitialState: function() {
+    return {
+      over: false
+    };
+  },
   handleFile: function(e) {
-    var reader;
+    var files, reader;
+    e.preventDefault();
     reader = new FileReader();
     reader.onload = (function(_this) {
       return function(evt) {
@@ -42,11 +48,34 @@ FileInput = React.createClass({
         return _this.props.updateXML(xml);
       };
     })(this);
-    return reader.readAsText(e.target.files[0]);
+    files = e.target.files || e.dataTransfer.files;
+    return reader.readAsText(files[0]);
+  },
+  timeout: null,
+  handleOver: function(e) {
+    e.preventDefault();
+    if (!this.state.over) {
+      this.setState({
+        over: true
+      });
+    }
+    clearTimeout(this.timeout);
+    return this.timeout = setTimeout(((function(_this) {
+      return function() {
+        return _this.setState({
+          over: false
+        });
+      };
+    })(this)), 200);
+  },
+  componentWillUnmount: function() {
+    return clearTimeout(this.timeout);
   },
   render: function() {
     return div({
-      className: 'fileInput'
+      className: 'fileInput' + (this.state.over ? " over" : ""),
+      onDrop: this.handleFile,
+      onDragOver: this.handleOver
     }, [
       p({}, "Upload a gpx file"), form({}, input({
         type: 'file',

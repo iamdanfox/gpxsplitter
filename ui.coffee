@@ -26,16 +26,32 @@ App = React.createClass({
 })
 
 FileInput = React.createClass({
+  getInitialState:() ->
+    over:false
+
   handleFile: (e) ->
+    e.preventDefault()
     reader = new FileReader()
     reader.onload = (evt) =>
       parser = new DOMParser()
       xml = parser.parseFromString(evt.target.result, 'text/xml')
       @props.updateXML(xml)
-    reader.readAsText(e.target.files[0])
+    files = e.target.files or e.dataTransfer.files
+    reader.readAsText(files[0])
+
+  timeout:null
+
+  handleOver: (e)->
+    e.preventDefault()
+    if not @state.over then @setState(over:true)
+    clearTimeout(@timeout)
+    @timeout = setTimeout (=> @setState(over:false)), 200
+
+  componentWillUnmount: () ->
+    clearTimeout(@timeout)
 
   render: () ->
-    (div {className:'fileInput'},[
+    (div {className:'fileInput'+(if @state.over then " over" else ""),onDrop:@handleFile, onDragOver:@handleOver},[
       (p {}, "Upload a gpx file"),
       (form {}, (input {type:'file',onChange:@handleFile}) )
     ])
