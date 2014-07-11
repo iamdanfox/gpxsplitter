@@ -18,7 +18,6 @@ App = React.createClass({
     });
   },
   updateXML: function(xml) {
-    console.log('updateXML', xml);
     return this.setState({
       xml: xml
     });
@@ -77,10 +76,13 @@ FileInput = React.createClass({
       onDrop: this.handleFile,
       onDragOver: this.handleOver
     }, [
-      p({}, "Upload a gpx file"), form({}, input({
-        type: 'file',
-        onChange: this.handleFile
-      }))
+      p({}, "Drag and drop a .gpx file"), p({}, [
+        "or choose from your computer", input({
+          type: 'file',
+          ref: 'inp',
+          onChange: this.handleFile
+        })
+      ])
     ]);
   }
 });

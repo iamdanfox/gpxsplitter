@@ -12,9 +12,7 @@ App = React.createClass({
   updateCutoff: (newCutoff) ->
     @setState(cutoff:newCutoff)
 
-  updateXML: (xml) ->
-    console.log 'updateXML', xml
-    @setState(xml:xml)
+  updateXML: (xml) ->  @setState(xml:xml)
 
   render: () ->
     (div {className:'app'}, [
@@ -26,8 +24,7 @@ App = React.createClass({
 })
 
 FileInput = React.createClass({
-  getInitialState:() ->
-    over:false
+  getInitialState:() -> {over:false}
 
   handleFile: (e) ->
     e.preventDefault()
@@ -47,13 +44,15 @@ FileInput = React.createClass({
     clearTimeout(@timeout)
     @timeout = setTimeout (=> @setState(over:false)), 200
 
-  componentWillUnmount: () ->
-    clearTimeout(@timeout)
+  componentWillUnmount: () -> clearTimeout(@timeout)
 
   render: () ->
-    (div {className:'fileInput'+(if @state.over then " over" else ""),onDrop:@handleFile, onDragOver:@handleOver},[
-      (p {}, "Upload a gpx file"),
-      (form {}, (input {type:'file',onChange:@handleFile}) )
+    (div {className:'fileInput'+(if @state.over then " over" else ""),onDrop:@handleFile, onDragOver:@handleOver}, [
+        (p {}, "Drag and drop a .gpx file"),
+        (p {}, [
+          "or choose from your computer",
+          (input {type:'file',ref:'inp',onChange:@handleFile})
+        ])
     ])
 })
 

@@ -10,8 +10,13 @@ body {background:#eee;color:rgb(51, 51, 51);}
 
 h1 {text-align:center;font-weight:normal}
 
-.fileInput {border:1px dashed red;}
-.fileInput.over {border: 1px solid red;}
+.fileInput {padding: 10px;width: 500px;margin: 0 auto;background: #fdfdfd;
+  -webkit-transition:all 300ms;-webkit-box-shadow:inset 0 0 2px 2px rgba(100,100,100,0.1);border:1px solid #ccc;}
+.fileInput.over {background:#fff;border-color:#fc4c02;}
+.fileInput p {padding:5%;width:40%;display:inline-block;vertical-align:middle;-webkit-transition:all 300ms;}
+.fileInput p:first-child {font-weight:bold;text-align:right;height:100%;}
+.fileInput p:nth-child(2) {border-left:1px solid #bbb;margin-left:-1px;}
+.fileInput.over p:nth-child(2) {pointer-events:none;opacity:0.1;}
 
 .GPXView {}
 h2 {font-weight:normal;}
