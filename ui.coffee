@@ -140,15 +140,17 @@ DownloadLinks = React.createClass({
     serializer = new XMLSerializer()
 
     newXMLString1 = serializer.serializeToString(xml1)
-    href1 = "data:application/gpx+xml;base64,"+btoa(newXMLString1)
+    blob1 = new Blob([newXMLString1])
+    url1 = window.URL.createObjectURL(blob1)
 
     newXMLString2 = serializer.serializeToString(xml2)
     newXMLString2 = """<?xml version="1.0" encoding="UTF-8"?>\n""" + newXMLString2
-    href2 = "data:application/gpx+xml;base64,"+btoa(newXMLString2)
+    blob2 = new Blob([newXMLString2])
+    url2 = window.URL.createObjectURL(blob2)
 
     (div {className:'downloadLinks'},[
-      (p {}, "Right click and select 'Save link as'"),
-      (a {href:href1}, "Download Part 1"),
-      (a {href:href2}, "Download Part 2")
+      (a {href:url1,download:'part1.gpx'}, "Download part1.gpx"),
+      " ",
+      (a {href:url2,download:'part2.gpx'}, "Download part2.gpx")
     ])
 })

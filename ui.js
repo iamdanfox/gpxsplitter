@@ -184,7 +184,7 @@ HRLine = React.createClass({
 
 DownloadLinks = React.createClass({
   render: function() {
-    var firstTime, href1, href2, newXMLString1, newXMLString2, serializer, xml1, xml2;
+    var blob1, blob2, firstTime, newXMLString1, newXMLString2, serializer, url1, url2, xml1, xml2;
     xml1 = this.props.xml.cloneNode(true);
     xml2 = this.props.xml.cloneNode(true);
     [].forEach.call(xml1.querySelectorAll('trkseg time'), (function(_this) {
@@ -207,18 +207,22 @@ DownloadLinks = React.createClass({
     xml2.querySelector('metadata time').innerHTML = firstTime;
     serializer = new XMLSerializer();
     newXMLString1 = serializer.serializeToString(xml1);
-    href1 = "data:application/gpx+xml;base64," + btoa(newXMLString1);
+    blob1 = new Blob([newXMLString1]);
+    url1 = window.URL.createObjectURL(blob1);
     newXMLString2 = serializer.serializeToString(xml2);
     newXMLString2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + newXMLString2;
-    href2 = "data:application/gpx+xml;base64," + btoa(newXMLString2);
+    blob2 = new Blob([newXMLString2]);
+    url2 = window.URL.createObjectURL(blob2);
     return div({
       className: 'downloadLinks'
     }, [
-      p({}, "Right click and select 'Save link as'"), a({
-        href: href1
-      }, "Download Part 1"), a({
-        href: href2
-      }, "Download Part 2")
+      a({
+        href: url1,
+        download: 'part1.gpx'
+      }, "Download part1.gpx"), " ", a({
+        href: url2,
+        download: 'part2.gpx'
+      }, "Download part2.gpx")
     ]);
   }
 });

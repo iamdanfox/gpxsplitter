@@ -10,8 +10,8 @@ MINIMAL AIMS:
 4. Return valid GPX files.
 -->
 <style>
-html {height:100%;font-family:Helvetica Neue, sans-serif;font-size:90%;}
-body {background:#eee;}
+html {height:100%;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:90%;}
+body {background:#eee;color:rgb(51, 51, 51);}
 .app {background:white;width:802px;padding:30px;margin: 4em auto;}
 
 h1 {text-align:center;}
@@ -21,8 +21,10 @@ svg {border: 1px solid #aaa;border-top:0;}
 svg path.cutoff {stroke:black;stroke-width:1.5px;}
 svg path.cursor {stroke:rgba(0,0,0,0.8);stroke-width:1.5px;}
 
-.downloadLinks {background:rgba(0,0,255,0.1);padding:10px;width:50%;margin: 1em auto;text-align:Center;}
-
+.downloadLinks {padding:30px;text-align:Center;}
+.downloadLinks a {padding:7px 10px; background:#fc4c02;color:white;text-decoration:none;margin:0 10px;}
+.downloadLinks a:hover {background-color:#e34402;}
+.downloadLinks a:visited {text-decoration: line-through;}
 </style>
 
 <script src="react.js"></script>
