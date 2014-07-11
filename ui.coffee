@@ -85,9 +85,12 @@ GPXView = React.createClass({
 
     name = @props.xml.querySelector('name').innerHTML
 
+    points = ({latitude:x.lat,longitude:x.lon} for t,x of data)
+    console.log points
+
     return (div {className:'GPXView'}, [
       (h2 {}, name),
-      Map(latitude:30,longitude:40,zoom:3,width:800,height:300,points:[{latitude:35,longitude:40,title:"Point 1"}] )
+      Map(latitude:41.0064790,longitude:28.9815280,zoom:15,width:800,height:300,points:points )
       (svg {height:250,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
         if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
         EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})

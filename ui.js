@@ -94,7 +94,7 @@ GPXView = React.createClass({
     };
   },
   render: function() {
-    var data, ele, hr, i, maxEle, maxHR, name, point, timestamp, trkpts, _i, _ref1, _ref2, _ref3;
+    var data, ele, hr, i, maxEle, maxHR, name, point, points, t, timestamp, trkpts, x, _i, _ref1, _ref2, _ref3;
     this.start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     this.end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     data = {};
@@ -113,22 +113,29 @@ GPXView = React.createClass({
       maxHR = Math.max(maxHR, hr);
     }
     name = this.props.xml.querySelector('name').innerHTML;
+    points = (function() {
+      var _results;
+      _results = [];
+      for (t in data) {
+        x = data[t];
+        _results.push({
+          latitude: x.lat,
+          longitude: x.lon
+        });
+      }
+      return _results;
+    })();
+    console.log(points);
     return div({
       className: 'GPXView'
     }, [
       h2({}, name), Map({
-        latitude: 30,
-        longitude: 40,
-        zoom: 3,
+        latitude: 41.0064790,
+        longitude: 28.9815280,
+        zoom: 15,
         width: 800,
         height: 300,
-        points: [
-          {
-            latitude: 35,
-            longitude: 40,
-            title: "Point 1"
-          }
-        ]
+        points: points
       }), svg({
         height: 250,
         width: 800,
