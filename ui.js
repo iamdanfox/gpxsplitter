@@ -211,7 +211,9 @@ DownloadLinks = React.createClass({
     newXMLString2 = serializer.serializeToString(xml2);
     newXMLString2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + newXMLString2;
     href2 = "data:application/gpx+xml;base64," + btoa(newXMLString2);
-    return div({}, [
+    return div({
+      className: 'downloadLinks'
+    }, [
       p({}, "Right click and select 'Save link as'"), a({
         href: href1
       }, "Download Part 1"), a({
