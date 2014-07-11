@@ -15,7 +15,8 @@ var Map = React.createClass({
   getInitialState: function() {
     return {
       map : null,
-      markers : []
+      markers : [],
+      line: null
     };
   },
 
@@ -28,6 +29,7 @@ var Map = React.createClass({
       width: 500,
       height: 500,
       points: [],
+      line:[],
       gmaps_api_key: '',
       gmaps_sensor: false
     }
@@ -35,24 +37,27 @@ var Map = React.createClass({
 
   // update geo-encoded polyline
   updatePolyLine : function(line) {
-    // var line = this.state.line;
-
-    // TODO: remove all old ones.
-
     var path = [];
     line.forEach( function(p){
       path.push(new google.maps.LatLng(p.latitude, p.longitude));
     });
 
-    this.state.line = new google.maps.Polyline({ // TODO: rename flightPath
+    var newline = new google.maps.Polyline({
       path: path,
       geodesic: true,
-      strokeColor: '#FF0000',
+      strokeColor: 'red',
       strokeOpacity: 1.0,
       strokeWeight: 2
     });
 
-    this.state.line.setMap(this.state.map)
+    // update existing, or add new
+    if (this.state.line) {
+      this.state.line.setPath(path)
+    } else {
+      this.state.line = newline
+      newline.setMap(this.state.map)
+    }
+
   },
 
   // update geo-encoded markers

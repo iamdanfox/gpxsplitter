@@ -125,7 +125,6 @@ GPXView = React.createClass({
       }
       return _results;
     })();
-    console.log(points);
     return div({
       className: 'GPXView'
     }, [
@@ -135,7 +134,7 @@ GPXView = React.createClass({
         zoom: 15,
         width: 800,
         height: 300,
-        points: points
+        line: points
       }), svg({
         height: 250,
         width: 800,
