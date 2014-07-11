@@ -94,7 +94,7 @@ GPXView = React.createClass({
     };
   },
   render: function() {
-    var data, ele, hr, i, maxEle, maxHR, name, point, points, t, timestamp, trkpts, x, _i, _ref1, _ref2, _ref3;
+    var c, data, ele, hr, i, lines, maxEle, maxHR, name, point, t, timestamp, trkpts, x, _i, _ref1, _ref2, _ref3;
     this.start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     this.end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     data = {};
@@ -113,18 +113,46 @@ GPXView = React.createClass({
       maxHR = Math.max(maxHR, hr);
     }
     name = this.props.xml.querySelector('name').innerHTML;
-    points = (function() {
-      var _results;
-      _results = [];
-      for (t in data) {
-        x = data[t];
-        _results.push({
-          latitude: x.lat,
-          longitude: x.lon
-        });
+    c = this.props.cutoff != null ? this.props.cutoff - this.start : Infinity;
+    c = this.state.dividerX != null ? this.state.dividerX * (this.end - this.start) / 800 : c;
+    lines = {
+      line1: {
+        points: (function() {
+          var _results;
+          _results = [];
+          for (t in data) {
+            x = data[t];
+            if (t < c) {
+              _results.push({
+                latitude: x.lat,
+                longitude: x.lon
+              });
+            }
+          }
+          return _results;
+        })(),
+        strokeColor: '#FF4136',
+        strokeWeight: 3
+      },
+      line2: {
+        points: (function() {
+          var _results;
+          _results = [];
+          for (t in data) {
+            x = data[t];
+            if (t >= c) {
+              _results.push({
+                latitude: x.lat,
+                longitude: x.lon
+              });
+            }
+          }
+          return _results;
+        })(),
+        strokeColor: '#0074D9',
+        strokeWeight: 3
       }
-      return _results;
-    })();
+    };
     return div({
       className: 'GPXView'
     }, [
@@ -134,7 +162,7 @@ GPXView = React.createClass({
         zoom: 15,
         width: 800,
         height: 300,
-        line: points
+        lines: lines
       }), svg({
         height: 250,
         width: 800,

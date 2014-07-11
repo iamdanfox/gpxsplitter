@@ -85,11 +85,24 @@ GPXView = React.createClass({
 
     name = @props.xml.querySelector('name').innerHTML
 
-    points = ({latitude:x.lat,longitude:x.lon} for t,x of data)
+
+    # set up red/blue lines
+    c = if @props.cutoff? then @props.cutoff-@start else Infinity
+    c = if @state.dividerX? then @state.dividerX * (@end - @start) / 800 else c
+    lines = {
+      line1:
+        points: ({latitude:x.lat,longitude:x.lon} for t,x of data when t < c),
+        strokeColor: '#FF4136',
+        strokeWeight: 3
+      line2:
+        points: ({latitude:x.lat,longitude:x.lon} for t,x of data when t >= c)
+        strokeColor: '#0074D9'
+        strokeWeight: 3
+    }
 
     return (div {className:'GPXView'}, [
       (h2 {}, name),
-      Map(latitude:41.0064790,longitude:28.9815280,zoom:15,width:800,height:300,line:points )
+      Map(latitude:41.0064790,longitude:28.9815280,zoom:15,width:800,height:300,lines:lines )
       (svg {height:250,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
         if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
         EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})

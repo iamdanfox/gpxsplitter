@@ -16,7 +16,7 @@ var Map = React.createClass({
     return {
       map : null,
       markers : [],
-      line: null
+      lines: {}
     };
   },
 
@@ -29,35 +29,35 @@ var Map = React.createClass({
       width: 500,
       height: 500,
       points: [],
-      line:[],
+      lines:{},
       gmaps_api_key: '',
       gmaps_sensor: false
     }
   },
 
   // update geo-encoded polyline
-  updatePolyLine : function(line) {
-    var path = [];
-    line.forEach( function(p){
-      path.push(new google.maps.LatLng(p.latitude, p.longitude));
-    });
+  updatePolyLine : function(lines) {
+    var keys = Object.keys(lines)
+    for (var i=0;i<keys.length;i++){
+      var lineName = keys[i]
+      var lineData = lines[lineName]
 
-    var newline = new google.maps.Polyline({
-      path: path,
-      geodesic: true,
-      strokeColor: 'red',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
-    });
+      // add `path` field to lineData
+      var path = [];
+      lineData.points.forEach( function(p){
+        path.push(new google.maps.LatLng(p.latitude, p.longitude));
+      });
 
-    // update existing, or add new
-    if (this.state.line) {
-      this.state.line.setPath(path)
-    } else {
-      this.state.line = newline
-      newline.setMap(this.state.map)
+      // update existing, or add new
+      if (this.state.lines[lineName]) {
+        this.state.lines[lineName].setOptions(lineData)
+        this.state.lines[lineName].setPath(path)
+      } else {
+        var newline = new google.maps.Polyline(lineData)
+        this.state.lines[lineName] = newline
+        newline.setMap(this.state.map)
+      }
     }
-
   },
 
   // update geo-encoded markers
@@ -117,7 +117,7 @@ var Map = React.createClass({
 
       this.setState( { map : map } );
       if( this.props.points ) this.updateMarkers(this.props.points);
-      if( this.props.line ) this.updatePolyLine(this.props.line);
+      if( this.props.lines ) this.updatePolyLine(this.props.lines);
 
     }).bind(this);
 
@@ -130,7 +130,7 @@ var Map = React.createClass({
   // update markers if needed
   componentWillReceiveProps : function(props) {
     if( props.points ) this.updateMarkers(props.points);
-    if( props.line ) this.updatePolyLine(props.line);
+    if( props.lines ) this.updatePolyLine(props.lines);
   }
 
 });
