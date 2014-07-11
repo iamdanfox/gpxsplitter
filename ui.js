@@ -33,10 +33,10 @@ App = React.createClass({
   },
   render: function() {
     return div({}, [
-      h1({}, "Strava Split"), p({}, "Upload a gpx file"), form({}, input({
+      h1({}, "Strava Split"), this.state.xml == null ? p({}, "Upload a gpx file") : null, this.state.xml == null ? form({}, input({
         type: 'file',
         onChange: this.handleFile
-      })), this.state.xml != null ? FileView(this.state) : null, this.state.cutoff != null ? DownloadView(this.state) : null
+      })) : null, this.state.xml != null ? FileView(this.state) : null, this.state.cutoff != null ? DownloadView(this.state) : null
     ]);
   }
 });

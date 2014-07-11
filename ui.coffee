@@ -23,8 +23,8 @@ App = React.createClass({
   render: () ->
     (div {}, [
       (h1 {}, "Strava Split")
-      (p {}, "Upload a gpx file"),
-      (form {}, (input {type:'file',onChange:@handleFile}) ),
+      if not @state.xml? then (p {}, "Upload a gpx file") else null,
+      if not @state.xml? then (form {}, (input {type:'file',onChange:@handleFile}) ) else null,
       if @state.xml? then FileView(@state) else null,
       if @state.cutoff? then DownloadView(@state) else null
     ])
