@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,a,button,svg,rect} = React.DOM
+{div,form,input,p,h1,a,button,svg,rect,path,g} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -36,7 +36,26 @@ FileView = React.createClass({
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
 
-    # elevation bar chart - TODO switch to line / region?
+    # pre-process data
+    data = {} # :: timestamp -> {lat,lon,ele,hr}
+    trkpts = @props.xml.getElementsByTagName('trkpt')
+    [maxEle, maxHR, maxTime] = [-Infinity, -Infinity, -Infinity]
+
+    for i in [0..trkpts.length-1]
+      point = trkpts[i]
+      timestamp = Date.parse(point.getElementsByTagName('time')[0].innerHTML)
+      data[timestamp - start] = {
+        lat: point.getAttribute('lat')
+        lon: point.getAttribute('lon')
+        ele: ele = point.getElementsByTagName('ele')[0].innerHTML
+        hr: hr = point.getElementsByTagName('hr')[0].innerHTML
+      }
+      maxEle = Math.max maxEle, ele
+      maxHR = Math.max maxHR, hr
+      maxTime = Math.max maxTime, timestamp
+
+
+    # elevation bar chart - TODO switch to line / region? - TODO switch to use timestamp on x axis!
     bars = []
     allpoints = @props.xml.getElementsByTagName('ele')
     barwidth = 600 / allpoints.length
@@ -44,14 +63,29 @@ FileView = React.createClass({
       h = allpoints[i].innerHTML
       bars.push( rect {height:h,width:barwidth,x:i*barwidth,y:100-h,fill:'black',stroke:'none'} )
 
-    # TODO heartrate line
-
     return (div {className:'fileView'}, [
       (h1 {}, name),
-      (svg {height:100,width:600}, bars)
+      (svg {height:100,width:600}, [
+        (g {}, HRLine({maxTime:maxTime,maxHR:maxHR,start:start,data:data})),
+        (g {}, bars)
+      ])
       (p {}, start + " to " + end),
       Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
     ])
+})
+
+HRLine = React.createClass({
+  #props: maxTime, maxHR, start, data
+  render: () ->
+    duration = @props.maxTime - @props.start
+    sfx = 600 / duration
+    sfy = 100 / @props.maxHR
+    hrline = "M 0 "+@props.data[0].hr+" L"
+    # HR line # TODO check maxHR
+    for t,obj of @props.data
+      hrline += " #{t * sfx} #{obj.hr * -sfy}"
+
+    return (path {d:hrline,stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"})
 })
 
 Selector = React.createClass({
