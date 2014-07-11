@@ -35,7 +35,7 @@ var Map = React.createClass({
     }
   },
 
-  // update geo-encoded polyline
+  // `lines` :: lineName -> {points,strokeColor, strokeWeight ...}
   updatePolyLine : function(lines) {
     var keys = Object.keys(lines)
     for (var i=0;i<keys.length;i++){
@@ -49,15 +49,14 @@ var Map = React.createClass({
       });
 
       // update existing, or add new
-      if (this.state.lines[lineName]) {
-        this.state.lines[lineName].setOptions(lineData)
-        this.state.lines[lineName].setPath(path)
-      } else {
-        var newline = new google.maps.Polyline(lineData)
-        this.state.lines[lineName] = newline
-        newline.setMap(this.state.map)
+      if (! this.state.lines[lineName] ) {
+        this.state.lines[lineName] = new google.maps.Polyline(lineData)
       }
+      this.state.lines[lineName].setMap(this.state.map)
+      this.state.lines[lineName].setOptions(lineData)
+      this.state.lines[lineName].setPath(path)
     }
+    // TODO: can this remove paths??
   },
 
   // update geo-encoded markers
