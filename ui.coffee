@@ -63,12 +63,14 @@ DownloadView = React.createClass({
   getInitialState: () -> {
     computed: null
   }
+
   handleClick: () ->
     @setState(computed:@props.cutoff)
+
   render: () ->
     (div {className:'downloadView',ref:'container'},
       if @state.computed is @props.cutoff
-        DownloadLinks()
+        DownloadLinks(@props)
       else
         (button {onClick:@handleClick}, "Split")
     )
@@ -76,10 +78,20 @@ DownloadView = React.createClass({
 
 DownloadLinks = React.createClass({
   render: () ->
+    xml = @props.xml
+    xml2 = xml.cloneNode(true)
+
     # do chopping
+    [].forEach.call( xml.querySelectorAll('time'), (t) =>
+      if Date.parse(t.innerHTML) >= @props.cutoff
+        t.parentNode.remove() # chops out a trkpt
+    )
+    [].forEach.call( xml2.querySelectorAll('time'), (t) =>
+      if Date.parse(t.innerHTML) < @props.cutoff
+        t.parentNode.remove() # chops out a trkpt
+    )
 
     # do serializing
-
     href1 = "http://google.com"
     href2 = "http://google.co.uk"
     (div {},[

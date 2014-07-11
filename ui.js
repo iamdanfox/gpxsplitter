@@ -98,7 +98,7 @@ DownloadView = React.createClass({
     return div({
       className: 'downloadView',
       ref: 'container'
-    }, this.state.computed === this.props.cutoff ? DownloadLinks() : button({
+    }, this.state.computed === this.props.cutoff ? DownloadLinks(this.props) : button({
       onClick: this.handleClick
     }, "Split"));
   }
@@ -106,7 +106,23 @@ DownloadView = React.createClass({
 
 DownloadLinks = React.createClass({
   render: function() {
-    var href1, href2;
+    var href1, href2, xml, xml2;
+    xml = this.props.xml;
+    xml2 = xml.cloneNode(true);
+    [].forEach.call(xml.querySelectorAll('time'), (function(_this) {
+      return function(t) {
+        if (Date.parse(t.innerHTML) >= _this.props.cutoff) {
+          return t.parentNode.remove();
+        }
+      };
+    })(this));
+    [].forEach.call(xml2.querySelectorAll('time'), (function(_this) {
+      return function(t) {
+        if (Date.parse(t.innerHTML) < _this.props.cutoff) {
+          return t.parentNode.remove();
+        }
+      };
+    })(this));
     href1 = "http://google.com";
     href2 = "http://google.co.uk";
     return div({}, [
