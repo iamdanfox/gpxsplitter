@@ -94,29 +94,81 @@ GPXView = React.createClass({
     };
   },
   render: function() {
-    var data, ele, hr, i, maxEle, maxHR, name, point, timestamp, trkpts, _i, _ref1, _ref2, _ref3;
+    var avgLat, avgLon, c, data, ele, hr, i, lat, lines, lon, maxEle, maxHR, name, point, points, t, timestamp, trkpts, x, _i, _ref1, _ref2, _ref3;
     this.start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     this.end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     data = {};
     trkpts = this.props.xml.getElementsByTagName('trkpt');
     _ref1 = [-Infinity, -Infinity], maxEle = _ref1[0], maxHR = _ref1[1];
+    avgLat = 0;
+    avgLon = 0;
     for (i = _i = 0, _ref2 = trkpts.length - 1; 0 <= _ref2 ? _i <= _ref2 : _i >= _ref2; i = 0 <= _ref2 ? ++_i : --_i) {
       point = trkpts[i];
       timestamp = Date.parse(point.getElementsByTagName('time')[0].innerHTML);
       data[timestamp - this.start] = {
-        lat: point.getAttribute('lat'),
-        lon: point.getAttribute('lon'),
+        lat: lat = point.getAttribute('lat'),
+        lon: lon = point.getAttribute('lon'),
         ele: ele = point.getElementsByTagName('ele')[0].innerHTML,
         hr: hr = (_ref3 = point.getElementsByTagName('hr')[0]) != null ? _ref3.innerHTML : void 0
       };
+      avgLat += lat / trkpts.length;
+      avgLon += lon / trkpts.length;
       maxEle = Math.max(maxEle, ele);
       maxHR = Math.max(maxHR, hr);
     }
     name = this.props.xml.querySelector('name').innerHTML;
+    c = (this.state.dividerX != null ? this.state.dividerX * (this.end - this.start) / 800 : this.props.cutoff != null ? this.props.cutoff - this.start : Infinity);
+    lines = {
+      line1: {
+        points: (function() {
+          var _results;
+          _results = [];
+          for (t in data) {
+            x = data[t];
+            if (t < c) {
+              _results.push({
+                latitude: x.lat,
+                longitude: x.lon
+              });
+            }
+          }
+          return _results;
+        })(),
+        strokeColor: '#FF4136',
+        strokeWeight: 3
+      },
+      line2: {
+        points: (function() {
+          var _results;
+          _results = [];
+          for (t in data) {
+            x = data[t];
+            if (t >= c) {
+              _results.push({
+                latitude: x.lat,
+                longitude: x.lon
+              });
+            }
+          }
+          return _results;
+        })(),
+        strokeColor: '#0074D9',
+        strokeWeight: 3
+      }
+    };
+    points = lines.line2.points[0] != null ? [lines.line2.points[0]] : [];
     return div({
       className: 'GPXView'
     }, [
-      h2({}, name), svg({
+      h2({}, name), Map({
+        latitude: avgLat,
+        longitude: avgLon,
+        zoom: 13,
+        width: 800,
+        height: 300,
+        lines: lines,
+        points: points
+      }), svg({
         height: 250,
         width: 800,
         onMouseMove: this.handleMove,
