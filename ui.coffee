@@ -26,7 +26,7 @@ App = React.createClass({
       if not @state.xml? then (p {}, "Upload a gpx file") else null,
       if not @state.xml? then (form {}, (input {type:'file',onChange:@handleFile}) ) else null,
       if @state.xml? then GPXView(@state) else null,
-      if @state.cutoff? then DownloadView(@state) else null
+      if @state.cutoff? then DownloadLinks(@state) else null
     ])
 })
 
@@ -116,27 +116,10 @@ HRLine = React.createClass({
     return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,250)"}, (path {d:hrline}))
 })
 
-DownloadView = React.createClass({
-  getInitialState: () -> {
-    computed: null
-  }
-
-  handleClick: () ->
-    @setState(computed:@props.cutoff)
-
-  render: () ->
-    (div {className:'downloadView',ref:'container'},
-      if @state.computed is @props.cutoff
-        DownloadLinks(@props)
-      else
-        (button {onClick:@handleClick}, "Split")
-    )
-})
-
 DownloadLinks = React.createClass({
   render: () ->
-    xml1 = @props.xml
-    xml2 = xml1.cloneNode(true)
+    xml1 = @props.xml.cloneNode(true)
+    xml2 = @props.xml.cloneNode(true)
 
     # do chopping
     [].forEach.call( xml1.querySelectorAll('trkseg time'), (t) =>
