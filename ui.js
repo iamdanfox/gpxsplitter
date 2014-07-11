@@ -116,7 +116,20 @@ GPXView = React.createClass({
     return div({
       className: 'GPXView'
     }, [
-      h2({}, name), svg({
+      h2({}, name), Map({
+        latitude: 30,
+        longitude: 40,
+        zoom: 3,
+        width: 800,
+        height: 300,
+        points: [
+          {
+            latitude: 35,
+            longitude: 40,
+            title: "Point 1"
+          }
+        ]
+      }), svg({
         height: 250,
         width: 800,
         onMouseMove: this.handleMove,
