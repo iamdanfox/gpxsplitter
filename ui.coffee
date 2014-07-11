@@ -1,5 +1,5 @@
 
-{div,form,input,p,h1,a,button,svg,rect} = React.DOM
+{div,form,input,p,h1,a,button,svg,rect,path,g} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -32,26 +32,62 @@ App = React.createClass({
 
 FileView = React.createClass({
   render: () ->
-    name = @props.xml.querySelector('name').innerHTML
+    # pre-process data
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
+    data = {} # :: timestamp -> {lat,lon,ele,hr}
+    trkpts = @props.xml.getElementsByTagName('trkpt')
+    [maxEle, maxHR, maxTime] = [-Infinity, -Infinity, -Infinity] # TODO: maxTime & end are the same
 
-    # elevation bar chart - TODO switch to line / region?
-    bars = []
-    allpoints = @props.xml.getElementsByTagName('ele')
-    barwidth = 600 / allpoints.length
-    for i in [0..allpoints.length-1]
-      h = allpoints[i].innerHTML
-      bars.push( rect {height:h,width:barwidth,x:i*barwidth,y:100-h,fill:'black',stroke:'none'} )
+    for i in [0..trkpts.length-1]
+      point = trkpts[i]
+      timestamp = Date.parse(point.getElementsByTagName('time')[0].innerHTML)
+      data[timestamp - start] = {
+        lat: point.getAttribute('lat')
+        lon: point.getAttribute('lon')
+        ele: ele = point.getElementsByTagName('ele')[0].innerHTML
+        hr: hr = point.getElementsByTagName('hr')[0].innerHTML
+      }
+      maxEle = Math.max maxEle, ele
+      maxHR = Math.max maxHR, hr
+      maxTime = Math.max maxTime, timestamp
 
-    # TODO heartrate line
-
+    name = @props.xml.querySelector('name').innerHTML
     return (div {className:'fileView'}, [
       (h1 {}, name),
-      (svg {height:100,width:600}, bars)
+      (svg {height:100,width:600}, [
+        HRLine({maxTime:maxTime,maxHR:maxHR,start:start,data:data}),
+        EleView({maxTime:maxTime,maxEle:maxEle,start:start,data:data})
+      ])
       (p {}, start + " to " + end),
       Selector({start:start,end:end,cutoff:@props.cutoff,updateCutoff:@props.updateCutoff})
     ])
+})
+
+EleView = React.createClass({
+  #props: maxTime, maxEle, start, data
+  render: () ->
+    duration = @props.maxTime - @props.start
+    sfx = 600 / duration
+    sfy = if @props.maxEle > 100 then 100 / @props.maxEle else 1
+
+    elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 600 0 Z"
+    # final 'Z' tells the path to join up
+    return (g {}, (path {d:elePath,stroke:'none', fill:'grey',transform:"translate(0,100)"}))
+})
+
+HRLine = React.createClass({
+  #props: maxTime, maxHR, start, data
+  render: () ->
+    duration = @props.maxTime - @props.start
+    sfx = 600 / duration
+    sfy = 100 / @props.maxHR
+
+    hrline = "M 0 "+@props.data[0].hr+" L"
+    for t,obj of @props.data
+      hrline += " #{t * sfx} #{obj.hr * -sfy}"
+
+    return (g {}, (path {d:hrline,stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"}))
 })
 
 Selector = React.createClass({
