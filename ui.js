@@ -74,8 +74,8 @@ GPXView = React.createClass({
       className: 'GPXView'
     }, [
       h2({}, name), svg({
-        height: 100,
-        width: 600,
+        height: 250,
+        width: 800,
         onMouseMove: this.handleMove,
         onMouseLeave: this.handleLeave,
         onClick: this.onClick,
@@ -113,7 +113,7 @@ GPXView = React.createClass({
   },
   onClick: function(e) {
     var c;
-    c = this.state.dividerX * (this.end - this.start) / 600 + this.start;
+    c = this.state.dividerX * (this.end - this.start) / 800 + this.start;
     return this.props.updateCutoff(c);
   }
 });
@@ -122,12 +122,12 @@ Divider = React.createClass({
   render: function() {
     var cutoffX;
     return g({}, [
-      this.props.cutoff != null ? (cutoffX = (this.props.cutoff - this.props.start) * (600 / (this.props.end - this.props.start)), path({
+      this.props.cutoff != null ? (cutoffX = (this.props.cutoff - this.props.start) * (800 / (this.props.end - this.props.start)), path({
         className: 'cutoff',
-        d: "M " + cutoffX + " 0 " + cutoffX + " 100"
+        d: "M " + cutoffX + " 0 " + cutoffX + " 250"
       })) : null, this.props.dividerX != null ? path({
         className: 'cursor',
-        d: "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 100"
+        d: "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 250"
       }) : null
     ]);
   }
@@ -137,8 +137,8 @@ EleView = React.createClass({
   render: function() {
     var duration, elePath, obj, sfx, sfy, t;
     duration = this.props.maxTime - this.props.start;
-    sfx = 600 / duration;
-    sfy = this.props.maxEle > 100 ? 100 / this.props.maxEle : 1;
+    sfx = 800 / duration;
+    sfy = this.props.maxEle > 250 ? 250 / this.props.maxEle : 1;
     elePath = ("M 0 " + this.props.data[0].ele + " L ") + ((function() {
       var _ref1, _results;
       _ref1 = this.props.data;
@@ -148,11 +148,11 @@ EleView = React.createClass({
         _results.push(t * sfx + " " + obj.ele * -sfy);
       }
       return _results;
-    }).call(this)).join(' ') + " 600 0 Z";
+    }).call(this)).join(' ') + " 800 0 Z";
     return g({
       stroke: 'none',
       fill: 'rgba(0,0,0,0.15)',
-      transform: "translate(0,100)"
+      transform: "translate(0,250)"
     }, path({
       d: elePath
     }));
@@ -163,8 +163,8 @@ HRLine = React.createClass({
   render: function() {
     var duration, hrline, obj, sfx, sfy, t, _ref1;
     duration = this.props.maxTime - this.props.start;
-    sfx = 600 / duration;
-    sfy = 100 / this.props.maxHR;
+    sfx = 800 / duration;
+    sfy = 250 / this.props.maxHR;
     hrline = "M 0 " + this.props.data[0].hr + " L";
     _ref1 = this.props.data;
     for (t in _ref1) {
@@ -175,7 +175,7 @@ HRLine = React.createClass({
       stroke: '#dd0447',
       strokeWidth: '1.5',
       fill: 'none',
-      transform: "translate(0,100)"
+      transform: "translate(0,250)"
     }, path({
       d: hrline
     }));

@@ -30,6 +30,8 @@ App = React.createClass({
     ])
 })
 
+
+# TODO: recale to 250 x 800
 GPXView = React.createClass({
   getInitialState: () -> {
     dividerX : 300
@@ -59,7 +61,7 @@ GPXView = React.createClass({
 
     return (div {className:'GPXView'}, [
       (h2 {}, name),
-      (svg {height:100,width:600,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
+      (svg {height:250,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
         HRLine({maxTime:maxTime,maxHR:maxHR,start:@start,data:data}),
         EleView({maxTime:maxTime,maxEle:maxEle,start:@start,data:data}),
         Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
@@ -71,7 +73,7 @@ GPXView = React.createClass({
   handleLeave: (e) ->
     @setState(dividerX:null)
   onClick: (e) ->
-    c = @state.dividerX * (@end - @start) / 600 + @start
+    c = @state.dividerX * (@end - @start) / 800 + @start
     @props.updateCutoff(c)
  })
 
@@ -79,11 +81,11 @@ Divider = React.createClass({
   render: () ->
     (g {}, [
       if @props.cutoff?
-        cutoffX = (@props.cutoff - @props.start) * (600 / (@props.end - @props.start))
-        (path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 100"})
+        cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
+        (path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 250"})
       else null,
       if @props.dividerX?
-        (path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 100"})
+        (path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 250"})
       else null
     ])
 })
@@ -92,26 +94,26 @@ EleView = React.createClass({
   #props: maxTime, maxEle, start, data
   render: () ->
     duration = @props.maxTime - @props.start
-    sfx = 600 / duration
-    sfy = if @props.maxEle > 100 then 100 / @props.maxEle else 1
+    sfx = 800 / duration
+    sfy = if @props.maxEle > 250 then 250 / @props.maxEle else 1
 
-    elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 600 0 Z"
+    elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 800 0 Z"
     # final 'Z' tells the path to join up
-    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,100)"}, (path {d:elePath}))
+    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,250)"}, (path {d:elePath}))
 })
 
 HRLine = React.createClass({
   #props: maxTime, maxHR, start, data
   render: () ->
     duration = @props.maxTime - @props.start
-    sfx = 600 / duration
-    sfy = 100 / @props.maxHR
+    sfx = 800 / duration
+    sfy = 250 / @props.maxHR
 
     hrline = "M 0 "+@props.data[0].hr+" L"
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
-    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,100)"}, (path {d:hrline}))
+    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,250)"}, (path {d:hrline}))
 })
 
 DownloadView = React.createClass({
