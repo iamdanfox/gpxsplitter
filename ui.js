@@ -169,7 +169,7 @@ GPXView = React.createClass({
         lines: lines,
         points: points
       }), svg({
-        height: 250,
+        height: 170,
         width: 800,
         onMouseMove: this.handleMove,
         onMouseLeave: this.handleLeave,
@@ -228,7 +228,7 @@ Divider = React.createClass({
       cutoffX = (this.props.cutoff - this.props.start) * (800 / (this.props.end - this.props.start));
       elems.push(path({
         className: 'cutoff',
-        d: "M " + cutoffX + " 0 " + cutoffX + " 250"
+        d: "M " + cutoffX + " 0 " + cutoffX + " 170"
       }));
     }
     if (this.props.dividerX != null) {
@@ -241,7 +241,7 @@ Divider = React.createClass({
       }));
       elems.push(path({
         className: 'cursor',
-        d: "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 250"
+        d: "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 170"
       }));
       c = this.props.dividerX * (this.props.end - this.props.start) / 800;
       elems.push(text({
@@ -258,7 +258,7 @@ EleView = React.createClass({
     var duration, elePath, obj, sfx, sfy, t;
     duration = this.props.maxTime - this.props.start;
     sfx = 800 / duration;
-    sfy = this.props.maxEle > 250 ? 250 / this.props.maxEle : 1;
+    sfy = this.props.maxEle > 170 ? 170 / this.props.maxEle : 1;
     elePath = ("M 0 " + this.props.data[0].ele + " L ") + ((function() {
       var _ref1, _results;
       _ref1 = this.props.data;
@@ -272,7 +272,7 @@ EleView = React.createClass({
     return g({
       stroke: 'none',
       fill: 'rgba(0,0,0,0.15)',
-      transform: "translate(0,250)"
+      transform: "translate(0,170)"
     }, path({
       d: elePath
     }));
@@ -284,7 +284,7 @@ HRLine = React.createClass({
     var duration, hrline, obj, sfx, sfy, t, _ref1;
     duration = this.props.maxTime - this.props.start;
     sfx = 800 / duration;
-    sfy = 250 / this.props.maxHR;
+    sfy = 170 / this.props.maxHR;
     hrline = "M 0 " + this.props.data[0].hr + " L";
     _ref1 = this.props.data;
     for (t in _ref1) {
@@ -295,7 +295,7 @@ HRLine = React.createClass({
       stroke: '#dd0447',
       strokeWidth: '1.5',
       fill: 'none',
-      transform: "translate(0,250)"
+      transform: "translate(0,170)"
     }, path({
       d: hrline
     }));

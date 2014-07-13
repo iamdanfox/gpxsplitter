@@ -107,7 +107,7 @@ GPXView = React.createClass({
     return (div {className:'GPXView'}, [
       (h2 {}, name),
       Map(latitude:avgLat,longitude:avgLon,zoom:13,width:800,height:300,lines:lines,points:points )
-      (svg {height:250,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
+      (svg {height:170,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
         if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
         EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})
         Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
@@ -139,10 +139,10 @@ Divider = React.createClass({
     elems =[]
     if @props.cutoff?
       cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
-      elems.push(path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 250"})
+      elems.push(path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 170"})
     if @props.dividerX?
       elems.push(React.DOM.rect {x:@props.dividerX, y:0, width:50, height:27, fill:'rgba(247,247,247,0.9)'} )
-      elems.push(path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 250"})
+      elems.push(path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 170"})
       #compute time from pixels
       c = @props.dividerX * (@props.end - @props.start) / 800
       elems.push(text {x:@props.dividerX+10, y:17}, nicetime(c))
@@ -154,11 +154,11 @@ EleView = React.createClass({
   render: () ->
     duration = @props.maxTime - @props.start
     sfx = 800 / duration
-    sfy = if @props.maxEle > 250 then 250 / @props.maxEle else 1
+    sfy = if @props.maxEle > 170 then 170 / @props.maxEle else 1
 
     elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 800 0 Z"
     # final 'Z' tells the path to join up
-    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,250)"}, (path {d:elePath}))
+    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,170)"}, (path {d:elePath}))
 })
 
 HRLine = React.createClass({
@@ -166,13 +166,13 @@ HRLine = React.createClass({
   render: () ->
     duration = @props.maxTime - @props.start
     sfx = 800 / duration
-    sfy = 250 / @props.maxHR
+    sfy = 170 / @props.maxHR
 
     hrline = "M 0 "+@props.data[0].hr+" L"
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
-    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,250)"}, (path {d:hrline}))
+    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,170)"}, (path {d:hrline}))
 })
 
 DownloadLinks = React.createClass({
