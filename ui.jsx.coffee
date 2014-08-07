@@ -112,7 +112,8 @@ GPXView = React.createClass
       <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
         { <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data} /> unless isNaN maxHR }
         <EleView maxTime={@end} maxEle={maxEle} start={@start} data={data} />
-        <Divider start={@start} end={@end} cutoff={@props.cutoff} dividerX={@state.dividerX} />
+        { <Divider start={@start} end={@end} cutoff={@props.cutoff} /> if @props.cutoff? }
+        { <Cursor start={@start} end={@end} cutoff={@props.cutoff} dividerX={@state.dividerX} /> if @state.dividerX }
       </svg>
       { <p>Click above to split your activity.</p> unless @props.cutoff? }
       { <p><a href='#' onClick={@startAgain}>back</a></p> unless @props.cutoff? }
@@ -136,15 +137,16 @@ GPXView = React.createClass
 
 Divider = React.createClass
   render: ->
+    cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
+    <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} />
+
+Cursor = React.createClass
+  render: ->
+    c = @props.dividerX * (@props.end - @props.start) / 800
     <g>
-      { if @props.cutoff?
-          cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
-          <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} /> }
-      { <rect x={@props.dividerX} y=0 width=50 height=27 fill='rgba(247,247,247,0.9)' /> if @props.dividerX }
-      { <path className='cursor' d={"M #{@props.dividerX} 0 #{@props.dividerX} 170"} /> if @props.dividerX }
-      { if @props.dividerX
-          c = @props.dividerX * (@props.end - @props.start) / 800
-          <text x={@props.dividerX+10} y=17>{nicetime(c)}</text> }
+      <path className='cursor' d={"M #{@props.dividerX} 0 #{@props.dividerX} 170"} />
+      <rect x={@props.dividerX} y=0 width=50 height=27 fill='rgba(247,247,247,0.9)' />
+      <text x={@props.dividerX+10} y=17>{nicetime(c)}</text>
     </g>
 
 
