@@ -158,19 +158,19 @@ Divider = React.createClass
     <g>{elems}</g>
 
 
-EleView = React.createClass({
+EleView = React.createClass
   #props: maxTime, maxEle, start, data
   render: ->
     duration = @props.maxTime - @props.start
     sfx = 800 / duration
     sfy = if @props.maxEle > 170 then 170 / @props.maxEle else 1
+    points = (t*sfx + ' ' + obj.ele*-sfy for t,obj of @props.data).join ' '
 
-    elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 800 0 Z"
     # final 'Z' tells the path to join up
     <g stroke='none' fill='rgba(0,0,0,0.15)' transform='translate(0,170)'>
-      <path d={elePath} />
+      <path d={"M 0 #{@props.data[0].ele} L #{points} 800 0 Z"} />
     </g>
-})
+
 
 HRLine = React.createClass({
   #props: maxTime, maxHR, start, data

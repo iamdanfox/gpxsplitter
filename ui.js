@@ -261,26 +261,26 @@ Divider = React.createClass({
 
 EleView = React.createClass({
   render: function() {
-    var duration, elePath, obj, sfx, sfy, t;
+    var duration, obj, points, sfx, sfy, t;
     duration = this.props.maxTime - this.props.start;
     sfx = 800 / duration;
     sfy = this.props.maxEle > 170 ? 170 / this.props.maxEle : 1;
-    elePath = ("M 0 " + this.props.data[0].ele + " L ") + ((function() {
+    points = ((function() {
       var _ref, _results;
       _ref = this.props.data;
       _results = [];
       for (t in _ref) {
         obj = _ref[t];
-        _results.push(t * sfx + " " + obj.ele * -sfy);
+        _results.push(t * sfx + ' ' + obj.ele * -sfy);
       }
       return _results;
-    }).call(this)).join(' ') + " 800 0 Z";
+    }).call(this)).join(' ');
     return React.DOM.g({
       "stroke": 'none',
       "fill": 'rgba(0,0,0,0.15)',
       "transform": 'translate(0,170)'
     }, React.DOM.path({
-      "d": elePath
+      "d": "M 0 " + this.props.data[0].ele + " L " + points + " 800 0 Z"
     }));
   }
 });
