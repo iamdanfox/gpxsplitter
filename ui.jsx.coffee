@@ -1,6 +1,3 @@
-
-{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span,text,em} = React.DOM
-
 App = React.createClass({
   getInitialState: () -> {
     xml:          null
@@ -15,14 +12,14 @@ App = React.createClass({
   updateXML: (xml) ->  @setState(xml:xml)
 
   render: () ->
-    (div {className:'app'}, [
-      (h1 {}, "GPX Splitter")
-      FileInput(@state) if not @state.xml?
-      Blurb() if not @state.xml?
-      GPXView(@state) if @state.xml?
-      if @state.cutoff? then DownloadLinks(@state)
-      Footer()
-    ])
+    <div className='app'>
+      <h1>GPX Splitter</h1>
+      {FileInput(@state) if not @state.xml?}
+      {<Blurb /> if not @state.xml?}
+      {GPXView(@state) if @state.xml?}
+      {if @state.cutoff? then DownloadLinks(@state)}
+      <Footer />
+    </div>
 })
 
 FileInput = React.createClass({
@@ -49,13 +46,10 @@ FileInput = React.createClass({
   componentWillUnmount: () -> clearTimeout(@timeout)
 
   render: () ->
-    (div {className:'fileInput'+(if @state.over then " over" else ""),onDrop:@handleFile, onDragOver:@handleOver}, [
-        (p {}, "Drag and drop a .gpx file"),
-        (p {}, [
-          "or choose from your computer",
-          (input {type:'file',ref:'inp',onChange:@handleFile})
-        ])
-    ])
+    <div className={if @state.over then 'fileInput over' else 'fileInput'} onDrop={@handleFile} onDragOver={@handleOver}>
+      <p>Drag and drop a .gpx file</p>
+      <p>or choose from your computer <input type='file' ref='inp' onChange={@handleFile}/></p>
+    </div>
 })
 
 GPXView = React.createClass({
@@ -104,19 +98,20 @@ GPXView = React.createClass({
     }
     points = if lines.line2.points[0]? then [lines.line2.points[0]] else []
 
-    return (div {className:'GPXView'}, [
-      (h2 {}, name),
-      Map(latitude:avgLat,longitude:avgLon,zoom:13,width:800,height:300,lines:lines,points:points )
-      (svg {height:170,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
-        if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
-        EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})
-        Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
-      ]),
-      if not @props.cutoff?
-        (p null, "Click above to split your activity.")
-      if not @props.cutoff?
-        (p null, (a {href:'#',onClick:@startAgain}, "back"))
-    ])
+    <div className='GPXView'>
+      <h2>{name}</h2>
+      <Map latitude={avgLat} longitude={avgLon} zoom=13 width=800 height=300 lines={lines} points={points} />
+      <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
+        {if not isNaN(maxHR)
+          <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data}  />}
+        <EleView maxTime={@end} maxEle={maxEle} start={@start} data={data} />
+        <Divider start={@start} end={@end} cutoff={@props.cutoff} dividerX={@state.dividerX} />
+      </svg>
+      {if not @props.cutoff?
+        <p>Click above to split your activity.</p>}
+      {if not @props.cutoff?
+        <p><a href='#' onClick={@startAgain}>back</a></p>}
+    </div>
 
   startAgain: () ->
     @props.updateCutoff(null)
@@ -139,14 +134,14 @@ Divider = React.createClass({
     elems =[]
     if @props.cutoff?
       cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
-      elems.push(path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 170"})
+      elems.push <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} />
     if @props.dividerX?
-      elems.push(React.DOM.rect {x:@props.dividerX, y:0, width:50, height:27, fill:'rgba(247,247,247,0.9)'} )
-      elems.push(path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 170"})
+      elems.push <rect x={@props.dividerX} y=0 width=50 height=7 fill='rgba(247,247,247,0.9)' />
+      elems.push <path className='cursor' d={"M #{@props.dividerX} 0 #{@props.dividerX} 170"} />
       #compute time from pixels
       c = @props.dividerX * (@props.end - @props.start) / 800
-      elems.push(text {x:@props.dividerX+10, y:17}, nicetime(c))
-    return (g {}, elems)
+      elems.push <text x={@props.dividerX+10} y=17>{nicetime(c)}</text>
+    return <g>{elems}</g>
 })
 
 EleView = React.createClass({
@@ -158,7 +153,9 @@ EleView = React.createClass({
 
     elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 800 0 Z"
     # final 'Z' tells the path to join up
-    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,170)"}, (path {d:elePath}))
+    <g stroke='none' fill='rgba(0,0,0,0.15)' transform='translate(0,170)'>
+      <path d={elePath} />
+    </g>
 })
 
 HRLine = React.createClass({
@@ -172,7 +169,9 @@ HRLine = React.createClass({
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
-    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,170)"}, (path {d:hrline}))
+    <g stroke='#dd0447' strokeWidth='1.5' fill='none' transform='translate(0,170)'>
+      <path d={hrline} />
+    </g>
 })
 
 DownloadLinks = React.createClass({
@@ -210,18 +209,15 @@ DownloadLinks = React.createClass({
     blob2 = new Blob([newXMLString2])
     url2 = window.URL.createObjectURL(blob2)
 
-    (div {className:'downloadLinks'},[
-      TinySummary(xml:xml1,url:url1,filename:'part1.gpx',handleClick:@handleClick)
-      " ",
-      TinySummary(xml:xml2,url:url2,filename:'part2.gpx',handleClick:@handleClick)
-      if @state.downloadedForCutoff is @props.cutoff
-        (p null,
-          "You can now ", (a {href:'http://www.strava.com/upload/select',target:'_blank'},
-          "upload these files to Strava"), " or ",
-          (a {href:'#',onClick:@startAgain}, "start again"), ".")
-      if @state.downloadedForCutoff is @props.cutoff
-        (p null, "Don't forget to delete the old activity!")
-    ])
+    <div className='downloadLinks'>
+      <TinySummary xml={xml1} url={url1} filename='part1.gpx' handleClick={@handleClick} />
+      <TinySummary xml={xml2} url={url2} filename='part2.gpx' handleClick={@handleClick} />
+      {if @state.downloadedForCutoff is @props.cutoff
+        <p>You can now <a href='http://www.strava.com/upload/select' target='_blank'>
+          upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>}
+      {if @state.downloadedForCutoff is @props.cutoff
+        <p>Remember to delete the old activity!</p>}
+    </div>
 
   handleClick: () -> @setState(downloadedForCutoff:@props.cutoff)
   startAgain: () ->
@@ -243,24 +239,25 @@ TinySummary = React.createClass({
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
     name = @props.xml.querySelector('name').innerHTML
 
-    (p {className:'tinySummary'}, [
-      (span {className:'duration'}, nicetime(end - start)),
-      (span {className:'label'}, "duration"),
-      (a {href:@props.url,className:'dl',download:@props.filename, onClick:@props.handleClick}, "Download "+@props.filename)
-    ])
+    <p className='tinySummary'>
+      <span className='duration'>{nicetime(end - start)}</span>
+      <span className='label'>duration</span>
+      <a href={@props.url} className='dl' download={@props.filename} onClick={@props.handleClick}>Download {@props.filename}</a>
+    </p>
 })
 
 Blurb = React.createClass({
   render: () ->
-    (div {className:'blurb'}, (p null, (em null, "Use this tool to split Strava
-      activities into separate parts.")), (p null, """
-      For example, if you've just done a triathlon, you might want to analyse each
-      phase as a separate activity."""),
-    (p null, "You'll need to export the GPX file from your Strava activity -
-    click the wrench icon. You can then split it up and then upload the two parts.  "))
+    (<div className='blurb'>
+        <p><em>Use this tool to split Strava activities into separate parts.</em></p>
+        <p>For example, if you've just done a triathlon, you might want to analyse each
+        phase as a separate activity.</p>
+        <p>You'll need to export the GPX file from your Strava activity -
+        click the wrench icon. You can then split it up and then upload the two parts.</p>
+      </div>)
 })
 
 Footer = React.createClass({
   render: () ->
-    (p {className:'footer'}, "made for fun by ", (a {href:'http://github.com/iamdanfox/gpxsplitter'}, "iamdanfox"))
+    <p className='footer'>made for fun by <a href='http://github.com/iamdanfox/gpxsplitter'>iamdanfox</a></p>
 })
