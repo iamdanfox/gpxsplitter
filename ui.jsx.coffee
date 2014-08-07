@@ -244,7 +244,7 @@ nicetime = (duration) ->
   pad = (x) -> if x<10 then "0"+x else x
   return (if hours>0 then hours+":" else "") + Math.floor(minutes)+":"+pad(seconds % 60)
 
-TinySummary = React.createClass({
+TinySummary = React.createClass
   #props: xml
   render: ->
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
@@ -256,18 +256,18 @@ TinySummary = React.createClass({
       <span className='label'>duration</span>
       <a href={@props.url} className='dl' download={@props.filename} onClick={@props.handleClick}>Download {@props.filename}</a>
     </p>
-})
 
-Blurb = React.createClass({
+
+Blurb = React.createClass
   render: ->
-    (<div className='blurb'>
-        <p><em>Use this tool to split Strava activities into separate parts.</em></p>
-        <p>For example, if you've just done a triathlon, you might want to analyse each
-        phase as a separate activity.</p>
-        <p>You'll need to export the GPX file from your Strava activity -
-        click the wrench icon. You can then split it up and then upload the two parts.</p>
-      </div>)
-})
+    <div className='blurb'>
+      <p><em>Use this tool to split Strava activities into separate parts.</em></p>
+      <p>For example, if you've just done a triathlon, you might want to analyse each
+      phase as a separate activity.</p>
+      <p>You'll need to export the GPX file from your Strava activity -
+      click the wrench icon. You can then split it up and then upload the two parts.</p>
+    </div>
+
 
 Footer = React.createClass
   render: ->
