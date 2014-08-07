@@ -1,5 +1,4 @@
-
-{div,form,input,p,h1,h2,a,button,svg,rect,path,g,span,text,em} = React.DOM
+{div,form,input,p,h2,a,button,svg,rect,path,g,span,text,em} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -16,7 +15,7 @@ App = React.createClass({
 
   render: () ->
     (div {className:'app'}, [
-      (h1 {}, "GPX Splitter")
+      <h1>GPX Splitter</h1>
       FileInput(@state) if not @state.xml?
       Blurb() if not @state.xml?
       GPXView(@state) if @state.xml?
