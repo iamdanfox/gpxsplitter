@@ -142,9 +142,9 @@ GPXView = React.createClass
     @props.updateCutoff c
 
 
-Divider = React.createClass({
+Divider = React.createClass
   render: ->
-    elems =[]
+    elems = []
     if @props.cutoff?
       cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
       elems.push <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} />
@@ -154,8 +154,9 @@ Divider = React.createClass({
       #compute time from pixels
       c = @props.dividerX * (@props.end - @props.start) / 800
       elems.push <text x={@props.dividerX+10} y=17>{nicetime(c)}</text>
-    return <g>{elems}</g>
-})
+
+    <g>{elems}</g>
+
 
 EleView = React.createClass({
   #props: maxTime, maxEle, start, data
