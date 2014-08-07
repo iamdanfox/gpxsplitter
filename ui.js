@@ -5,9 +5,7 @@ App = React.createClass({
   getInitialState: function() {
     return {
       xml: null,
-      cutoff: null,
-      updateCutoff: this.updateCutoff,
-      updateXML: this.updateXML
+      cutoff: null
     };
   },
   updateCutoff: function(newCutoff) {
@@ -382,12 +380,12 @@ nicetime = function(duration) {
   hours = Math.floor(minutes / 60);
   pad = function(x) {
     if (x < 10) {
-      return "0" + x;
+      return '0' + x;
     } else {
       return x;
     }
   };
-  return (hours > 0 ? hours + ":" : "") + Math.floor(minutes) + ":" + pad(seconds % 60);
+  return (hours > 0 ? hours + ':' : '') + Math.floor(minutes) + ":" + pad(seconds % 60);
 };
 
 TinySummary = React.createClass({

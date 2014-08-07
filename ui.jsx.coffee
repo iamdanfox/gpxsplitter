@@ -2,8 +2,6 @@ App = React.createClass
   getInitialState: ->
     xml:          null
     cutoff:       null
-    updateCutoff: @updateCutoff
-    updateXML:    @updateXML
 
   updateCutoff: (newCutoff) ->
     @setState(cutoff:newCutoff)
@@ -245,8 +243,9 @@ nicetime = (duration) ->
   seconds = Math.floor(duration / 1000)
   minutes = seconds / 60
   hours = Math.floor(minutes / 60)
-  pad = (x) -> if x<10 then "0"+x else x
-  return (if hours>0 then hours+":" else "") + Math.floor(minutes)+":"+pad(seconds % 60)
+  pad = (x) -> if x < 10 then '0' + x else x
+  return (if hours > 0 then hours + ':' else '') + Math.floor(minutes) + ":" + pad(seconds % 60)
+
 
 TinySummary = React.createClass
   #props: xml
