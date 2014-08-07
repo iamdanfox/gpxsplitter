@@ -155,7 +155,9 @@ EleView = React.createClass({
 
     elePath = "M 0 #{@props.data[0].ele} L " + (t*sfx + " "+ obj.ele*-sfy for t,obj of @props.data).join(' ') + " 800 0 Z"
     # final 'Z' tells the path to join up
-    return (g {stroke:'none', fill:'rgba(0,0,0,0.15)',transform:"translate(0,170)"}, (path {d:elePath}))
+    <g stroke='none' fill='rgba(0,0,0,0.15)' transform='translate(0,170)'>
+      <path d={elePath} />
+    </g>
 })
 
 HRLine = React.createClass({

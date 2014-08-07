@@ -261,12 +261,12 @@ EleView = React.createClass({
       }
       return _results;
     }).call(this)).join(' ') + " 800 0 Z";
-    return g({
-      stroke: 'none',
-      fill: 'rgba(0,0,0,0.15)',
-      transform: "translate(0,170)"
-    }, path({
-      d: elePath
+    return React.DOM.g({
+      "stroke": 'none',
+      "fill": 'rgba(0,0,0,0.15)',
+      "transform": 'translate(0,170)'
+    }, React.DOM.path({
+      "d": elePath
     }));
   }
 });
