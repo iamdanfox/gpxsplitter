@@ -218,30 +218,30 @@ Divider = React.createClass({
     elems = [];
     if (this.props.cutoff != null) {
       cutoffX = (this.props.cutoff - this.props.start) * (800 / (this.props.end - this.props.start));
-      elems.push(path({
-        className: 'cutoff',
-        d: "M " + cutoffX + " 0 " + cutoffX + " 170"
+      elems.push(React.DOM.path({
+        "className": 'cutoff',
+        "d": "M " + cutoffX + " 0 " + cutoffX + " 170"
       }));
     }
     if (this.props.dividerX != null) {
       elems.push(React.DOM.rect({
-        x: this.props.dividerX,
-        y: 0,
-        width: 50,
-        height: 27,
-        fill: 'rgba(247,247,247,0.9)'
+        "x": this.props.dividerX,
+        "y": 0,
+        "width": 50,
+        "height": 7,
+        "fill": 'rgba(247,247,247,0.9)'
       }));
-      elems.push(path({
-        className: 'cursor',
-        d: "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 170"
+      elems.push(React.DOM.path({
+        "className": 'cursor',
+        "d": "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 170"
       }));
       c = this.props.dividerX * (this.props.end - this.props.start) / 800;
-      elems.push(text({
-        x: this.props.dividerX + 10,
-        y: 17
+      elems.push(React.DOM.text({
+        "x": this.props.dividerX + 10,
+        "y": 17
       }, nicetime(c)));
     }
-    return g({}, elems);
+    return React.DOM.g(null, elems);
   }
 });
 

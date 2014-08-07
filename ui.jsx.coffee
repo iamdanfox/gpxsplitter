@@ -136,14 +136,14 @@ Divider = React.createClass({
     elems =[]
     if @props.cutoff?
       cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
-      elems.push(path {className:'cutoff',d:"M #{cutoffX} 0 #{cutoffX} 170"})
+      elems.push <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} />
     if @props.dividerX?
-      elems.push(React.DOM.rect {x:@props.dividerX, y:0, width:50, height:27, fill:'rgba(247,247,247,0.9)'} )
-      elems.push(path {className:'cursor',d:"M #{@props.dividerX} 0 #{@props.dividerX} 170"})
+      elems.push <rect x={@props.dividerX} y=0 width=50 height=7 fill='rgba(247,247,247,0.9)' />
+      elems.push <path className='cursor' d={"M #{@props.dividerX} 0 #{@props.dividerX} 170"} />
       #compute time from pixels
       c = @props.dividerX * (@props.end - @props.start) / 800
-      elems.push(text {x:@props.dividerX+10, y:17}, nicetime(c))
-    return (g {}, elems)
+      elems.push <text x={@props.dividerX+10} y=17>{nicetime(c)}</text>
+    return <g>{elems}</g>
 })
 
 EleView = React.createClass({
