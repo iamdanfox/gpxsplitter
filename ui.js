@@ -325,7 +325,7 @@ DownloadLinks = React.createClass({
         }
       };
     })(this));
-    xml1.querySelector('trk name').innerHTML += " (part 1)";
+    xml1.querySelector('trk name').innerHTML += ' (part 1)';
     [].forEach.call(xml2.querySelectorAll('trkseg time'), (function(_this) {
       return function(t) {
         if (Date.parse(t.innerHTML) < _this.props.cutoff) {
@@ -333,7 +333,7 @@ DownloadLinks = React.createClass({
         }
       };
     })(this));
-    xml2.querySelector('trk name').innerHTML += " (part 2)";
+    xml2.querySelector('trk name').innerHTML += ' (part 2)';
     firstTime = xml2.querySelector('trk time').innerHTML;
     xml2.querySelector('metadata time').innerHTML = firstTime;
     serializer = new XMLSerializer();

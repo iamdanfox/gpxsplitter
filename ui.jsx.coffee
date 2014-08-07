@@ -172,7 +172,7 @@ EleView = React.createClass
     </g>
 
 
-HRLine = React.createClass({
+HRLine = React.createClass
   #props: maxTime, maxHR, start, data
   render: ->
     duration = @props.maxTime - @props.start
@@ -186,42 +186,42 @@ HRLine = React.createClass({
     <g stroke='#dd0447' strokeWidth='1.5' fill='none' transform='translate(0,170)'>
       <path d={hrline} />
     </g>
-})
 
-DownloadLinks = React.createClass({
+
+DownloadLinks = React.createClass
   getInitialState: ->
     downloadedForCutoff: null
 
   render: ->
-    xml1 = @props.xml.cloneNode(true)
-    xml2 = @props.xml.cloneNode(true)
+    xml1 = @props.xml.cloneNode true
+    xml2 = @props.xml.cloneNode true
 
     # do chopping
-    [].forEach.call( xml1.querySelectorAll('trkseg time'), (t) =>
+    [].forEach.call xml1.querySelectorAll('trkseg time'), (t) =>
       if Date.parse(t.innerHTML) >= @props.cutoff
         t.parentNode.remove() # chops out a trkpt
-    )
-    xml1.querySelector('trk name').innerHTML += " (part 1)"
 
-    [].forEach.call( xml2.querySelectorAll('trkseg time'), (t) =>
+    xml1.querySelector('trk name').innerHTML += ' (part 1)'
+
+    [].forEach.call xml2.querySelectorAll('trkseg time'), (t) =>
       if Date.parse(t.innerHTML) < @props.cutoff
         t.parentNode.remove() # chops out a trkpt
-    )
-    xml2.querySelector('trk name').innerHTML += " (part 2)"
+
+    xml2.querySelector('trk name').innerHTML += ' (part 2)'
     firstTime = xml2.querySelector('trk time').innerHTML
     xml2.querySelector('metadata time').innerHTML = firstTime
 
     # do serializing
     serializer = new XMLSerializer()
 
-    newXMLString1 = serializer.serializeToString(xml1)
-    blob1 = new Blob([newXMLString1])
-    url1 = window.URL.createObjectURL(blob1)
+    newXMLString1 = serializer.serializeToString xml1
+    blob1 = new Blob [newXMLString1]
+    url1 = window.URL.createObjectURL blob1
 
-    newXMLString2 = serializer.serializeToString(xml2)
+    newXMLString2 = serializer.serializeToString xml2
     newXMLString2 = """<?xml version="1.0" encoding="UTF-8"?>\n""" + newXMLString2
-    blob2 = new Blob([newXMLString2])
-    url2 = window.URL.createObjectURL(blob2)
+    blob2 = new Blob [newXMLString2]
+    url2 = window.URL.createObjectURL blob2
 
     <div className='downloadLinks'>
       <TinySummary xml={xml1} url={url1} filename='part1.gpx' handleClick={@handleClick} />
@@ -233,11 +233,13 @@ DownloadLinks = React.createClass({
         <p>Remember to delete the old activity!</p>}
     </div>
 
-  handleClick: ->@setState(downloadedForCutoff:@props.cutoff)
+  handleClick: ->
+    @setState downloadedForCutoff: @props.cutoff
+
   startAgain: ->
-    @props.updateCutoff(null)
-    @props.updateXML(null)
-})
+    @props.updateCutoff null
+    @props.updateXML null
+
 
 nicetime = (duration) ->
   seconds = Math.floor(duration / 1000)
