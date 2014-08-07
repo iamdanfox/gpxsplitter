@@ -31,35 +31,38 @@ App = React.createClass
     </div>
 
 
-FileInput = React.createClass({
-  getInitialState:() -> {over:false}
+FileInput = React.createClass
+  getInitialState: ->
+    over: false
 
   handleFile: (e) ->
     e.preventDefault()
     reader = new FileReader()
     reader.onload = (evt) =>
       parser = new DOMParser()
-      xml = parser.parseFromString(evt.target.result, 'text/xml')
-      @props.updateXML(xml)
+      xml = parser.parseFromString evt.target.result, 'text/xml'
+      @props.updateXML xml
     files = e.target.files or e.dataTransfer.files
-    reader.readAsText(files[0])
+    reader.readAsText files[0]
 
-  timeout:null
+  timeout: null
 
   handleOver: (e)->
     e.preventDefault()
-    if not @state.over then @setState(over:true)
-    clearTimeout(@timeout)
-    @timeout = setTimeout (=> @setState(over:false)), 200
+    if not @state.over
+      @setState over: true
+    clearTimeout @timeout
+    @timeout = setTimeout (=> @setState over: false), 200
 
-  componentWillUnmount: () -> clearTimeout(@timeout)
+  componentWillUnmount: ->
+    clearTimeout @timeout
 
-  render: () ->
+  render: ->
     <div className={if @state.over then 'fileInput over' else 'fileInput'} onDrop={@handleFile} onDragOver={@handleOver}>
       <p>Drag and drop a .gpx file</p>
       <p>or choose from your computer <input type='file' ref='inp' onChange={@handleFile}/></p>
     </div>
-})
+
 
 GPXView = React.createClass({
   getInitialState: () -> {
