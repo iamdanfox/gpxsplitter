@@ -210,9 +210,8 @@ DownloadLinks = React.createClass({
     url2 = window.URL.createObjectURL(blob2)
 
     (div {className:'downloadLinks'},[
-      TinySummary(xml:xml1,url:url1,filename:'part1.gpx',handleClick:@handleClick)
-      " ",
-      TinySummary(xml:xml2,url:url2,filename:'part2.gpx',handleClick:@handleClick)
+      <TinySummary xml={xml1} url={url1} filename='part1.gpx' handleClick={@handleClick} />
+      <TinySummary xml={xml2} url={url2} filename='part2.gpx' handleClick={@handleClick} />
       if @state.downloadedForCutoff is @props.cutoff
         <p>You can now <a href='http://www.strava.com/upload/select' target='_blank'>
           upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>
@@ -240,11 +239,11 @@ TinySummary = React.createClass({
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
     name = @props.xml.querySelector('name').innerHTML
 
-    (p {className:'tinySummary'}, [
+    <p className='tinySummary'>
       <span className='duration'>{nicetime(end - start)}</span>
       <span className='label'>duration</span>
-      (a {href:@props.url,className:'dl',download:@props.filename, onClick:@props.handleClick}, "Download "+@props.filename)
-    ])
+      <a href={@props.url} className='dl' download={@props.filename} onClick={@props.handleClick}>Download {@props.filename}</a>
+    </p>
 })
 
 Blurb = React.createClass({

@@ -342,15 +342,15 @@ DownloadLinks = React.createClass({
       className: 'downloadLinks'
     }, [
       TinySummary({
-        xml: xml1,
-        url: url1,
-        filename: 'part1.gpx',
-        handleClick: this.handleClick
-      }), " ", TinySummary({
-        xml: xml2,
-        url: url2,
-        filename: 'part2.gpx',
-        handleClick: this.handleClick
+        "xml": xml1,
+        "url": url1,
+        "filename": 'part1.gpx',
+        "handleClick": this.handleClick
+      }), TinySummary({
+        "xml": xml2,
+        "url": url2,
+        "filename": 'part2.gpx',
+        "handleClick": this.handleClick
       }), this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "You can now ", React.DOM.a({
         "href": 'http://www.strava.com/upload/select',
         "target": '_blank'
@@ -392,20 +392,18 @@ TinySummary = React.createClass({
     start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     name = this.props.xml.querySelector('name').innerHTML;
-    return p({
-      className: 'tinySummary'
-    }, [
-      React.DOM.span({
-        "className": 'duration'
-      }, nicetime(end - start)), React.DOM.span({
-        "className": 'label'
-      }, "duration"), a({
-        href: this.props.url,
-        className: 'dl',
-        download: this.props.filename,
-        onClick: this.props.handleClick
-      }, "Download " + this.props.filename)
-    ]);
+    return React.DOM.p({
+      "className": 'tinySummary'
+    }, React.DOM.span({
+      "className": 'duration'
+    }, nicetime(end - start)), React.DOM.span({
+      "className": 'label'
+    }, "duration"), React.DOM.a({
+      "href": this.props.url,
+      "className": 'dl',
+      "download": this.props.filename,
+      "onClick": this.props.handleClick
+    }, "Download ", this.props.filename));
   }
 });
 
