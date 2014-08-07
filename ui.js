@@ -226,34 +226,23 @@ GPXView = React.createClass({
 
 Divider = React.createClass({
   render: function() {
-    var c, cutoffX, elems;
-    elems = [];
-    if (this.props.cutoff != null) {
-      cutoffX = (this.props.cutoff - this.props.start) * (800 / (this.props.end - this.props.start));
-      elems.push(React.DOM.path({
-        "className": 'cutoff',
-        "d": "M " + cutoffX + " 0 " + cutoffX + " 170"
-      }));
-    }
-    if (this.props.dividerX != null) {
-      elems.push(React.DOM.rect({
-        "x": this.props.dividerX,
-        "y": 0,
-        "width": 50,
-        "height": 7,
-        "fill": 'rgba(247,247,247,0.9)'
-      }));
-      elems.push(React.DOM.path({
-        "className": 'cursor',
-        "d": "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 170"
-      }));
-      c = this.props.dividerX * (this.props.end - this.props.start) / 800;
-      elems.push(React.DOM.text({
-        "x": this.props.dividerX + 10,
-        "y": 17
-      }, nicetime(c)));
-    }
-    return React.DOM.g(null, elems);
+    var c, cutoffX;
+    return React.DOM.g(null, (this.props.cutoff != null ? (cutoffX = (this.props.cutoff - this.props.start) * (800 / (this.props.end - this.props.start)), React.DOM.path({
+      "className": 'cutoff',
+      "d": "M " + cutoffX + " 0 " + cutoffX + " 170"
+    })) : void 0), (this.props.dividerX ? React.DOM.rect({
+      "x": this.props.dividerX,
+      "y": 0,
+      "width": 50,
+      "height": 27,
+      "fill": 'rgba(247,247,247,0.9)'
+    }) : void 0), (this.props.dividerX ? React.DOM.path({
+      "className": 'cursor',
+      "d": "M " + this.props.dividerX + " 0 " + this.props.dividerX + " 170"
+    }) : void 0), (this.props.dividerX ? (c = this.props.dividerX * (this.props.end - this.props.start) / 800, React.DOM.text({
+      "x": this.props.dividerX + 10,
+      "y": 17
+    }, nicetime(c))) : void 0));
   }
 });
 

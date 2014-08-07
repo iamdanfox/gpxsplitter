@@ -12,19 +12,15 @@ App = React.createClass
   render: ->
     <div className='app'>
       <h1>GPX Splitter</h1>
-      {
-        if @state.xml?
+      { if @state.xml?
           <GPXView xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} />
         else
           <div>
             <FileInput xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} />
             <Blurb />
-          </div>
-      }
-      {
-        if @state.cutoff?
-          <DownloadLinks xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} />
-      }
+          </div> }
+      { if @state.cutoff?
+          <DownloadLinks xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} /> }
       <Footer />
     </div>
 
@@ -114,14 +110,12 @@ GPXView = React.createClass
       <h2>{name}</h2>
       <Map latitude={avgLat} longitude={avgLon} zoom=13 width=800 height=300 lines={lines} points={points} />
       <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
-        {<HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data} /> unless isNaN maxHR}
+        { <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data} /> unless isNaN maxHR }
         <EleView maxTime={@end} maxEle={maxEle} start={@start} data={data} />
         <Divider start={@start} end={@end} cutoff={@props.cutoff} dividerX={@state.dividerX} />
       </svg>
-      {if not @props.cutoff?
-        <p>Click above to split your activity.</p>}
-      {if not @props.cutoff?
-        <p><a href='#' onClick={@startAgain}>back</a></p>}
+      { <p>Click above to split your activity.</p> unless @props.cutoff? }
+      { <p><a href='#' onClick={@startAgain}>back</a></p> unless @props.cutoff? }
     </div>
 
   startAgain: ->
@@ -142,18 +136,16 @@ GPXView = React.createClass
 
 Divider = React.createClass
   render: ->
-    elems = []
-    if @props.cutoff?
-      cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
-      elems.push <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} />
-    if @props.dividerX?
-      elems.push <rect x={@props.dividerX} y=0 width=50 height=7 fill='rgba(247,247,247,0.9)' />
-      elems.push <path className='cursor' d={"M #{@props.dividerX} 0 #{@props.dividerX} 170"} />
-      #compute time from pixels
-      c = @props.dividerX * (@props.end - @props.start) / 800
-      elems.push <text x={@props.dividerX+10} y=17>{nicetime(c)}</text>
-
-    <g>{elems}</g>
+    <g>
+      { if @props.cutoff?
+          cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
+          <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} /> }
+      { <rect x={@props.dividerX} y=0 width=50 height=27 fill='rgba(247,247,247,0.9)' /> if @props.dividerX }
+      { <path className='cursor' d={"M #{@props.dividerX} 0 #{@props.dividerX} 170"} /> if @props.dividerX }
+      { if @props.dividerX
+          c = @props.dividerX * (@props.end - @props.start) / 800
+          <text x={@props.dividerX+10} y=17>{nicetime(c)}</text> }
+    </g>
 
 
 EleView = React.createClass
@@ -224,11 +216,11 @@ DownloadLinks = React.createClass
     <div className='downloadLinks'>
       <TinySummary xml={xml1} url={url1} filename='part1.gpx' handleClick={@handleClick} />
       <TinySummary xml={xml2} url={url2} filename='part2.gpx' handleClick={@handleClick} />
-      {if @state.downloadedForCutoff is @props.cutoff
-        <p>You can now <a href='http://www.strava.com/upload/select' target='_blank'>
-          upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>}
-      {if @state.downloadedForCutoff is @props.cutoff
-        <p>Remember to delete the old activity!</p>}
+      { if @state.downloadedForCutoff is @props.cutoff
+          <p>You can now <a href='http://www.strava.com/upload/select' target='_blank'>
+          upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>  }
+      { if @state.downloadedForCutoff is @props.cutoff
+          <p>Remember to delete the old activity!</p> }
     </div>
 
   handleClick: ->
