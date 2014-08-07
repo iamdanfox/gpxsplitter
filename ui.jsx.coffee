@@ -1,4 +1,4 @@
-{div,form,input,p,h2,a,button,svg,rect,path,g,text,em} = React.DOM
+{div,p,h2,a,button,svg,rect,path,g,text,em} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -48,13 +48,10 @@ FileInput = React.createClass({
   componentWillUnmount: () -> clearTimeout(@timeout)
 
   render: () ->
-    (div {className:'fileInput'+(if @state.over then " over" else ""),onDrop:@handleFile, onDragOver:@handleOver}, [
-        (p {}, "Drag and drop a .gpx file"),
-        (p {}, [
-          "or choose from your computer",
-          (input {type:'file',ref:'inp',onChange:@handleFile})
-        ])
-    ])
+    <div className={if @state.over then 'fileInput over' else 'fileInput'} onDrop={@handleFile} onDragOver={@handleOver}>
+      <p>Drag and drop a .gpx file</p>
+      <p>or choose from your computer <input type='file' ref='inp' onChange={@handleFile}/></p>
+    </div>
 })
 
 GPXView = React.createClass({
