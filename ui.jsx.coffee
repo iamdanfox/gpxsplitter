@@ -1,5 +1,3 @@
-{div,p,a} = React.DOM
-
 App = React.createClass({
   getInitialState: () -> {
     xml:          null
