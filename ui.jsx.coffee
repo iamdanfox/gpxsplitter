@@ -64,29 +64,29 @@ FileInput = React.createClass
     </div>
 
 
-GPXView = React.createClass({
-  getInitialState: ->{
-    dividerX : 300
-  }
+GPXView = React.createClass
+  getInitialState: ->
+    dividerX: 300
+
   render: ->
     # pre-process data
-    @start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
-    @end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
+    @start = Date.parse @props.xml.querySelector('trkseg trkpt:first-child time').innerHTML
+    @end = Date.parse @props.xml.querySelector('trkseg trkpt:last-child time').innerHTML
     data = {} # :: timestamp -> {lat,lon,ele,hr}
-    trkpts = @props.xml.getElementsByTagName('trkpt')
+    trkpts = @props.xml.getElementsByTagName 'trkpt'
     [maxEle, maxHR] = [-Infinity, -Infinity]
     avgLat = 0
     avgLon = 0
 
     for i in [0..trkpts.length-1]
       point = trkpts[i]
-      timestamp = Date.parse(point.getElementsByTagName('time')[0].innerHTML)
-      data[timestamp - @start] = {
-        lat: lat = point.getAttribute('lat')
-        lon: lon = point.getAttribute('lon')
+      timestamp = Date.parse point.getElementsByTagName('time')[0].innerHTML
+      data[timestamp - @start] =
+        lat: lat = point.getAttribute 'lat'
+        lon: lon = point.getAttribute 'lon'
         ele: ele = point.getElementsByTagName('ele')[0].innerHTML
         hr: hr = point.getElementsByTagName('hr')[0]?.innerHTML
-      }
+
       avgLat += lat/trkpts.length
       avgLon += lon/trkpts.length
       maxEle = Math.max maxEle, ele
@@ -96,26 +96,27 @@ GPXView = React.createClass({
 
 
     # set up red/blue lines
-    c = (if @state.dividerX? then @state.dividerX * (@end - @start) / 800
-    else if @props.cutoff? then @props.cutoff-@start else Infinity)
-    lines = {
+    c = (if @state.dividerX?
+      @state.dividerX * (@end - @start) / 800
+    else
+      if @props.cutoff? then @props.cutoff-@start else Infinity)
+    lines =
       line1:
-        points: ({latitude:x.lat,longitude:x.lon} for t,x of data when t < c),
+        points: ({latitude: x.lat, longitude: x.lon} for t,x of data when t < c),
         strokeColor: '#FF4136',
         strokeWeight: 3
       line2:
-        points: ({latitude:x.lat,longitude:x.lon} for t,x of data when t >= c)
+        points: ({latitude: x.lat, longitude: x.lon} for t,x of data when t >= c)
         strokeColor: '#0074D9'
         strokeWeight: 3
-    }
+
     points = if lines.line2.points[0]? then [lines.line2.points[0]] else []
 
     <div className='GPXView'>
       <h2>{name}</h2>
       <Map latitude={avgLat} longitude={avgLon} zoom=13 width=800 height=300 lines={lines} points={points} />
       <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
-        {if not isNaN(maxHR)
-          <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data}  />}
+        {<HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data} /> unless isNaN maxHR}
         <EleView maxTime={@end} maxEle={maxEle} start={@start} data={data} />
         <Divider start={@start} end={@end} cutoff={@props.cutoff} dividerX={@state.dividerX} />
       </svg>
@@ -126,20 +127,20 @@ GPXView = React.createClass({
     </div>
 
   startAgain: ->
-    @props.updateCutoff(null)
-    @props.updateXML(null)
+    @props.updateCutoff null
+    @props.updateXML null
 
   handleMove: (e) ->
-    rect = @refs.svg.getDOMNode().getBoundingClientRect();
-    @setState(dividerX:e.clientX-rect.left)
+    rect = @refs.svg.getDOMNode().getBoundingClientRect()
+    @setState dividerX: e.clientX-rect.left
 
   handleLeave: (e) ->
-    @setState(dividerX:null)
+    @setState dividerX: null
 
   onClick: (e) ->
     c = @state.dividerX * (@end - @start) / 800 + @start
-    @props.updateCutoff(c)
- })
+    @props.updateCutoff c
+
 
 Divider = React.createClass({
   render: ->
