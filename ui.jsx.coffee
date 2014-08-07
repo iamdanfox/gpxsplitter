@@ -1,4 +1,4 @@
-{div,form,input,p,h2,a,button,svg,rect,path,g,span,text,em} = React.DOM
+{div,form,input,p,h2,a,button,svg,rect,path,g,text,em} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -241,8 +241,8 @@ TinySummary = React.createClass({
     name = @props.xml.querySelector('name').innerHTML
 
     (p {className:'tinySummary'}, [
-      (span {className:'duration'}, nicetime(end - start)),
-      (span {className:'label'}, "duration"),
+      <span className='duration'>{nicetime(end - start)}</span>
+      <span className='label'>duration</span>
       (a {href:@props.url,className:'dl',download:@props.filename, onClick:@props.handleClick}, "Download "+@props.filename)
     ])
 })
