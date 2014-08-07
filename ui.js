@@ -23,7 +23,22 @@ App = React.createClass({
   render: function() {
     return React.DOM.div({
       "className": 'app'
-    }, React.DOM.h1(null, "GPX Splitter"), (this.state.xml == null ? FileInput(this.state) : void 0), (this.state.xml == null ? Blurb(null) : void 0), (this.state.xml != null ? GPXView(this.state) : void 0), (this.state.cutoff != null ? DownloadLinks(this.state) : void 0), Footer(null));
+    }, React.DOM.h1(null, "GPX Splitter"), (this.state.xml != null ? GPXView({
+      "xml": this.state.xml,
+      "cutoff": this.state.cutoff,
+      "updateXML": this.updateXML,
+      "updateCutoff": this.updateCutoff
+    }) : React.DOM.div(null, FileInput({
+      "xml": this.state.xml,
+      "cutoff": this.state.cutoff,
+      "updateXML": this.updateXML,
+      "updateCutoff": this.updateCutoff
+    }), Blurb(null))), (this.state.cutoff != null ? DownloadLinks({
+      "xml": this.state.xml,
+      "cutoff": this.state.cutoff,
+      "updateXML": this.updateXML,
+      "updateCutoff": this.updateCutoff
+    }) : void 0), Footer(null));
   }
 });
 

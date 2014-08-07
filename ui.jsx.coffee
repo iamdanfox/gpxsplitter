@@ -1,26 +1,35 @@
-App = React.createClass({
-  getInitialState: () -> {
+App = React.createClass
+  getInitialState: ->
     xml:          null
     cutoff:       null
     updateCutoff: @updateCutoff
     updateXML:    @updateXML
-  }
 
   updateCutoff: (newCutoff) ->
     @setState(cutoff:newCutoff)
 
-  updateXML: (xml) ->  @setState(xml:xml)
+  updateXML: (xml) ->
+    @setState(xml:xml)
 
-  render: () ->
+  render: ->
     <div className='app'>
       <h1>GPX Splitter</h1>
-      {FileInput(@state) if not @state.xml?}
-      {<Blurb /> if not @state.xml?}
-      {GPXView(@state) if @state.xml?}
-      {if @state.cutoff? then DownloadLinks(@state)}
+      {
+        if @state.xml?
+          <GPXView xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} />
+        else
+          <div>
+            <FileInput xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} />
+            <Blurb />
+          </div>
+      }
+      {
+        if @state.cutoff?
+          <DownloadLinks xml={@state.xml} cutoff={@state.cutoff} updateXML={@updateXML} updateCutoff={@updateCutoff} />
+      }
       <Footer />
     </div>
-})
+
 
 FileInput = React.createClass({
   getInitialState:() -> {over:false}
