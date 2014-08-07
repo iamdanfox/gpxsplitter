@@ -214,12 +214,10 @@ DownloadLinks = React.createClass({
       " ",
       TinySummary(xml:xml2,url:url2,filename:'part2.gpx',handleClick:@handleClick)
       if @state.downloadedForCutoff is @props.cutoff
-        (p null,
-          "You can now ", (a {href:'http://www.strava.com/upload/select',target:'_blank'},
-          "upload these files to Strava"), " or ",
-          (a {href:'#',onClick:@startAgain}, "start again"), ".")
+        <p>You can now <a href='http://www.strava.com/upload/select' target='_blank'>
+          upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>
       if @state.downloadedForCutoff is @props.cutoff
-        (p null, "Don't forget to delete the old activity!")
+        <p>Remember to delete the old activity!</p>
     ])
 
   handleClick: () -> @setState(downloadedForCutoff:@props.cutoff)
@@ -251,15 +249,16 @@ TinySummary = React.createClass({
 
 Blurb = React.createClass({
   render: () ->
-    (div {className:'blurb'}, (p null, (em null, "Use this tool to split Strava
-      activities into separate parts.")), (p null, """
-      For example, if you've just done a triathlon, you might want to analyse each
-      phase as a separate activity."""),
-    (p null, "You'll need to export the GPX file from your Strava activity -
-    click the wrench icon. You can then split it up and then upload the two parts.  "))
+    (<div className='blurb'>
+        <p><em>Use this tool to split Strava activities into separate parts.</em></p>
+        <p>For example, if you've just done a triathlon, you might want to analyse each
+        phase as a separate activity.</p>
+        <p>You'll need to export the GPX file from your Strava activity -
+        click the wrench icon. You can then split it up and then upload the two parts.</p>
+      </div>)
 })
 
 Footer = React.createClass({
   render: () ->
-    (p {className:'footer'}, "made for fun by ", (a {href:'http://github.com/iamdanfox/gpxsplitter'}, "iamdanfox"))
+    <p className='footer'>made for fun by <a href='http://github.com/iamdanfox/gpxsplitter'>iamdanfox</a></p>
 })

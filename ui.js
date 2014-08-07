@@ -351,13 +351,13 @@ DownloadLinks = React.createClass({
         url: url2,
         filename: 'part2.gpx',
         handleClick: this.handleClick
-      }), this.state.downloadedForCutoff === this.props.cutoff ? p(null, "You can now ", a({
-        href: 'http://www.strava.com/upload/select',
-        target: '_blank'
-      }, "upload these files to Strava"), " or ", a({
-        href: '#',
-        onClick: this.startAgain
-      }, "start again"), ".") : void 0, this.state.downloadedForCutoff === this.props.cutoff ? p(null, "Don't forget to delete the old activity!") : void 0
+      }), this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "You can now ", React.DOM.a({
+        "href": 'http://www.strava.com/upload/select',
+        "target": '_blank'
+      }, "upload these files to Strava"), " or ", React.DOM.a({
+        "href": '#',
+        "onClick": this.startAgain
+      }, "start again"), ".") : void 0, this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "Remember to delete the old activity!") : void 0
     ]);
   },
   handleClick: function() {
@@ -411,18 +411,18 @@ TinySummary = React.createClass({
 
 Blurb = React.createClass({
   render: function() {
-    return div({
-      className: 'blurb'
-    }, p(null, em(null, "Use this tool to split Strava activities into separate parts.")), p(null, "For example, if you've just done a triathlon, you might want to analyse each\nphase as a separate activity."), p(null, "You'll need to export the GPX file from your Strava activity - click the wrench icon. You can then split it up and then upload the two parts.  "));
+    return React.DOM.div({
+      "className": 'blurb'
+    }, React.DOM.p(null, React.DOM.em(null, "Use this tool to split Strava activities into separate parts.")), React.DOM.p(null, "For example, if you\'ve just done a triathlon, you might want to analyse each\nphase as a separate activity."), React.DOM.p(null, "You\'ll need to export the GPX file from your Strava activity -\nclick the wrench icon. You can then split it up and then upload the two parts."));
   }
 });
 
 Footer = React.createClass({
   render: function() {
-    return p({
-      className: 'footer'
-    }, "made for fun by ", a({
-      href: 'http://github.com/iamdanfox/gpxsplitter'
+    return React.DOM.p({
+      "className": 'footer'
+    }, "made for fun by ", React.DOM.a({
+      "href": 'http://github.com/iamdanfox/gpxsplitter'
     }, "iamdanfox"));
   }
 });
