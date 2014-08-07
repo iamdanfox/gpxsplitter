@@ -23,9 +23,9 @@ App = React.createClass({
     });
   },
   render: function() {
-    return div({
-      className: 'app'
-    }, [React.DOM.h1(null, "GPX Splitter"), this.state.xml == null ? FileInput(this.state) : void 0, this.state.xml == null ? Blurb() : void 0, this.state.xml != null ? GPXView(this.state) : void 0, this.state.cutoff != null ? DownloadLinks(this.state) : void 0, Footer()]);
+    return React.DOM.div({
+      "className": 'app'
+    }, React.DOM.h1(null, "GPX Splitter"), (this.state.xml == null ? FileInput(this.state) : void 0), (this.state.xml == null ? Blurb(null) : void 0), (this.state.xml != null ? GPXView(this.state) : void 0), (this.state.cutoff != null ? DownloadLinks(this.state) : void 0), Footer(null));
   }
 });
 
@@ -338,27 +338,25 @@ DownloadLinks = React.createClass({
     newXMLString2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + newXMLString2;
     blob2 = new Blob([newXMLString2]);
     url2 = window.URL.createObjectURL(blob2);
-    return div({
-      className: 'downloadLinks'
-    }, [
-      TinySummary({
-        "xml": xml1,
-        "url": url1,
-        "filename": 'part1.gpx',
-        "handleClick": this.handleClick
-      }), TinySummary({
-        "xml": xml2,
-        "url": url2,
-        "filename": 'part2.gpx',
-        "handleClick": this.handleClick
-      }), this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "You can now ", React.DOM.a({
-        "href": 'http://www.strava.com/upload/select',
-        "target": '_blank'
-      }, "upload these files to Strava"), " or ", React.DOM.a({
-        "href": '#',
-        "onClick": this.startAgain
-      }, "start again"), ".") : void 0, this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "Remember to delete the old activity!") : void 0
-    ]);
+    return React.DOM.div({
+      "className": 'downloadLinks'
+    }, TinySummary({
+      "xml": xml1,
+      "url": url1,
+      "filename": 'part1.gpx',
+      "handleClick": this.handleClick
+    }), TinySummary({
+      "xml": xml2,
+      "url": url2,
+      "filename": 'part2.gpx',
+      "handleClick": this.handleClick
+    }), (this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "You can now ", React.DOM.a({
+      "href": 'http://www.strava.com/upload/select',
+      "target": '_blank'
+    }, "upload these files to Strava"), " or ", React.DOM.a({
+      "href": '#',
+      "onClick": this.startAgain
+    }, "start again"), ".") : void 0), (this.state.downloadedForCutoff === this.props.cutoff ? React.DOM.p(null, "Remember to delete the old activity!") : void 0));
   },
   handleClick: function() {
     return this.setState({

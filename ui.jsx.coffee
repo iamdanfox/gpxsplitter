@@ -14,14 +14,14 @@ App = React.createClass({
   updateXML: (xml) ->  @setState(xml:xml)
 
   render: () ->
-    (div {className:'app'}, [
+    <div className='app'>
       <h1>GPX Splitter</h1>
-      FileInput(@state) if not @state.xml?
-      Blurb() if not @state.xml?
-      GPXView(@state) if @state.xml?
-      if @state.cutoff? then DownloadLinks(@state)
-      Footer()
-    ])
+      {FileInput(@state) if not @state.xml?}
+      {<Blurb /> if not @state.xml?}
+      {GPXView(@state) if @state.xml?}
+      {if @state.cutoff? then DownloadLinks(@state)}
+      <Footer />
+    </div>
 })
 
 FileInput = React.createClass({
@@ -209,15 +209,15 @@ DownloadLinks = React.createClass({
     blob2 = new Blob([newXMLString2])
     url2 = window.URL.createObjectURL(blob2)
 
-    (div {className:'downloadLinks'},[
+    <div className='downloadLinks'>
       <TinySummary xml={xml1} url={url1} filename='part1.gpx' handleClick={@handleClick} />
       <TinySummary xml={xml2} url={url2} filename='part2.gpx' handleClick={@handleClick} />
-      if @state.downloadedForCutoff is @props.cutoff
+      {if @state.downloadedForCutoff is @props.cutoff
         <p>You can now <a href='http://www.strava.com/upload/select' target='_blank'>
-          upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>
-      if @state.downloadedForCutoff is @props.cutoff
-        <p>Remember to delete the old activity!</p>
-    ])
+          upload these files to Strava</a> or <a href='#' onClick={@startAgain}>start again</a>.</p>}
+      {if @state.downloadedForCutoff is @props.cutoff
+        <p>Remember to delete the old activity!</p>}
+    </div>
 
   handleClick: () -> @setState(downloadedForCutoff:@props.cutoff)
   startAgain: () ->
