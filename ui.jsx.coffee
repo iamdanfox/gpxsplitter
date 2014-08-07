@@ -1,4 +1,4 @@
-{div,p,a,button,rect,path,g,text,em} = React.DOM
+{div,p,a} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -171,7 +171,9 @@ HRLine = React.createClass({
     for t,obj of @props.data
       hrline += " #{t * sfx} #{obj.hr * -sfy}"
 
-    return (g {stroke:'#dd0447',strokeWidth:'1.5', fill:'none',transform:"translate(0,170)"}, (path {d:hrline}))
+    <g stroke='#dd0447' strokeWidth='1.5' fill='none' transform='translate(0,170)'>
+      <path d={hrline} />
+    </g>
 })
 
 DownloadLinks = React.createClass({
