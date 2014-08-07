@@ -65,10 +65,10 @@ FileInput = React.createClass
 
 
 GPXView = React.createClass({
-  getInitialState: () -> {
+  getInitialState: ->{
     dividerX : 300
   }
-  render: () ->
+  render: ->
     # pre-process data
     @start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     @end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
@@ -125,7 +125,7 @@ GPXView = React.createClass({
         <p><a href='#' onClick={@startAgain}>back</a></p>}
     </div>
 
-  startAgain: () ->
+  startAgain: ->
     @props.updateCutoff(null)
     @props.updateXML(null)
 
@@ -142,7 +142,7 @@ GPXView = React.createClass({
  })
 
 Divider = React.createClass({
-  render: () ->
+  render: ->
     elems =[]
     if @props.cutoff?
       cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
@@ -158,7 +158,7 @@ Divider = React.createClass({
 
 EleView = React.createClass({
   #props: maxTime, maxEle, start, data
-  render: () ->
+  render: ->
     duration = @props.maxTime - @props.start
     sfx = 800 / duration
     sfy = if @props.maxEle > 170 then 170 / @props.maxEle else 1
@@ -172,7 +172,7 @@ EleView = React.createClass({
 
 HRLine = React.createClass({
   #props: maxTime, maxHR, start, data
-  render: () ->
+  render: ->
     duration = @props.maxTime - @props.start
     sfx = 800 / duration
     sfy = 170 / @props.maxHR
@@ -187,10 +187,10 @@ HRLine = React.createClass({
 })
 
 DownloadLinks = React.createClass({
-  getInitialState: () ->
+  getInitialState: ->
     downloadedForCutoff: null
 
-  render: () ->
+  render: ->
     xml1 = @props.xml.cloneNode(true)
     xml2 = @props.xml.cloneNode(true)
 
@@ -231,8 +231,8 @@ DownloadLinks = React.createClass({
         <p>Remember to delete the old activity!</p>}
     </div>
 
-  handleClick: () -> @setState(downloadedForCutoff:@props.cutoff)
-  startAgain: () ->
+  handleClick: ->@setState(downloadedForCutoff:@props.cutoff)
+  startAgain: ->
     @props.updateCutoff(null)
     @props.updateXML(null)
 })
@@ -246,7 +246,7 @@ nicetime = (duration) ->
 
 TinySummary = React.createClass({
   #props: xml
-  render: () ->
+  render: ->
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
     end = Date.parse(@props.xml.querySelector('trkseg trkpt:last-child time').innerHTML)
     name = @props.xml.querySelector('name').innerHTML
@@ -259,7 +259,7 @@ TinySummary = React.createClass({
 })
 
 Blurb = React.createClass({
-  render: () ->
+  render: ->
     (<div className='blurb'>
         <p><em>Use this tool to split Strava activities into separate parts.</em></p>
         <p>For example, if you've just done a triathlon, you might want to analyse each
@@ -269,7 +269,6 @@ Blurb = React.createClass({
       </div>)
 })
 
-Footer = React.createClass({
-  render: () ->
+Footer = React.createClass
+  render: ->
     <p className='footer'>made for fun by <a href='http://github.com/iamdanfox/gpxsplitter'>iamdanfox</a></p>
-})
