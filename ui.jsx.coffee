@@ -1,4 +1,4 @@
-{div,p,h2,a,button,svg,rect,path,g,text,em} = React.DOM
+{div,p,a,button,rect,path,g,text,em} = React.DOM
 
 App = React.createClass({
   getInitialState: () -> {
@@ -100,19 +100,20 @@ GPXView = React.createClass({
     }
     points = if lines.line2.points[0]? then [lines.line2.points[0]] else []
 
-    return (div {className:'GPXView'}, [
-      (h2 {}, name),
-      Map(latitude:avgLat,longitude:avgLon,zoom:13,width:800,height:300,lines:lines,points:points )
-      (svg {height:170,width:800,onMouseMove:@handleMove,onMouseLeave:@handleLeave,onClick:@onClick,ref:'svg'}, [
-        if not isNaN(maxHR) then HRLine({maxTime:@end,maxHR:maxHR,start:@start,data:data})
-        EleView({maxTime:@end,maxEle:maxEle,start:@start,data:data})
-        Divider({start:@start,end:@end,cutoff:@props.cutoff,dividerX:@state.dividerX})
-      ]),
-      if not @props.cutoff?
-        (p null, "Click above to split your activity.")
-      if not @props.cutoff?
-        (p null, (a {href:'#',onClick:@startAgain}, "back"))
-    ])
+    <div className='GPXView'>
+      <h2>{name}</h2>
+      <Map latitude={avgLat} longitude={avgLon} zoom=13 width=800 height=300 lines={lines} points={points} />
+      <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
+        {if not isNaN(maxHR)
+          <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data}  />}
+        <EleView maxTime={@end} maxEle={maxEle} start={@start} data={data} />
+        <Divider start={@start} end={@end} cutoff={@props.cutoff} dividerX={@state.dividerX} />
+      </svg>
+      {if not @props.cutoff?
+        <p>Click above to split your activity.</p>}
+      {if not @props.cutoff?
+        <p><a href='#' onClick={@startAgain}>back</a></p>}
+    </div>
 
   startAgain: () ->
     @props.updateCutoff(null)
