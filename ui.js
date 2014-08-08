@@ -101,7 +101,7 @@ GPXView = React.createClass({
     };
   },
   render: function() {
-    var avgLat, avgLon, c, data, ele, hr, i, lat, lines, lon, maxEle, maxHR, name, point, points, t, timestamp, trkpts, x, _i, _ref, _ref1, _ref2;
+    var avgLat, avgLon, c, data, ele, hr, i, lat, lines, lon, maxEle, maxHR, name, point, t, timestamp, trkpts, x, _i, _ref, _ref1, _ref2;
     this.start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
     this.end = Date.parse(this.props.xml.querySelector('trkseg trkpt:last-child time').innerHTML);
     data = {};
@@ -125,8 +125,9 @@ GPXView = React.createClass({
     }
     name = this.props.xml.querySelector('name').innerHTML;
     c = (this.state.dividerX != null ? this.state.dividerX * (this.end - this.start) / 800 : this.props.cutoff != null ? this.props.cutoff - this.start : Infinity);
-    lines = {
-      line1: {
+    lines = [
+      {
+        id: 'line1',
         points: (function() {
           var _results;
           _results = [];
@@ -143,8 +144,8 @@ GPXView = React.createClass({
         })(),
         strokeColor: '#FF4136',
         strokeWeight: 3
-      },
-      line2: {
+      }, {
+        id: 'line2',
         points: (function() {
           var _results;
           _results = [];
@@ -162,8 +163,7 @@ GPXView = React.createClass({
         strokeColor: '#0074D9',
         strokeWeight: 3
       }
-    };
-    points = lines.line2.points[0] != null ? [lines.line2.points[0]] : [];
+    ];
     return React.DOM.div({
       "className": 'GPXView'
     }, React.DOM.h2(null, name), MapBox({
@@ -174,8 +174,7 @@ GPXView = React.createClass({
       "zoom": 13,
       "width": 800,
       "height": 300,
-      "lines": lines,
-      "points": points
+      "lines": lines
     }), React.DOM.svg({
       "height": 170,
       "width": 800,

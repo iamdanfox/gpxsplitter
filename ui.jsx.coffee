@@ -94,17 +94,19 @@ GPXView = React.createClass
       @state.dividerX * (@end - @start) / 800
     else
       if @props.cutoff? then @props.cutoff-@start else Infinity)
-    lines =
-      line1:
-        points: ({latitude: x.lat, longitude: x.lon} for t,x of data when t < c),
-        strokeColor: '#FF4136',
-        strokeWeight: 3
-      line2:
-        points: ({latitude: x.lat, longitude: x.lon} for t,x of data when t >= c)
-        strokeColor: '#0074D9'
-        strokeWeight: 3
+    lines = [
+      id: 'line1'
+      points: ({latitude: x.lat, longitude: x.lon} for t,x of data when t < c),
+      strokeColor: '#FF4136',
+      strokeWeight: 3
+    ,
+      id: 'line2'
+      points: ({latitude: x.lat, longitude: x.lon} for t,x of data when t >= c)
+      strokeColor: '#0074D9'
+      strokeWeight: 3
+    ]
 
-    points = if lines.line2.points[0]? then [lines.line2.points[0]] else []
+    #points = if lines.line2.points[0]? then [lines.line2.points[0]] else []
 
     <div className='GPXView'>
       <h2>{name}</h2>
@@ -112,10 +114,10 @@ GPXView = React.createClass
         apiToken='pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg'
         id='myMap'
         latitude={avgLat}
-        longitude={avgLon} 
-        zoom=13 width=800 
-        height=300 
-        lines={lines} points={points} 
+        longitude={avgLon}
+        zoom=13 width=800
+        height=300
+        lines={lines}
       />
       <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
         { <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data} /> unless isNaN maxHR }
