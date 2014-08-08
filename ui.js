@@ -2,6 +2,7 @@
 var App, Blurb, Cursor, Divider, DownloadLinks, EleView, FileInput, Footer, GPXView, HRLine, TinySummary, nicetime;
 
 App = React.createClass({
+  displayName: 'App',
   getInitialState: function() {
     return {
       xml: null,
@@ -41,6 +42,7 @@ App = React.createClass({
 });
 
 FileInput = React.createClass({
+  displayName: 'FileInput',
   getInitialState: function() {
     return {
       over: false
@@ -95,6 +97,7 @@ FileInput = React.createClass({
 });
 
 GPXView = React.createClass({
+  displayName: 'GPXView',
   getInitialState: function() {
     return {
       dividerX: 300
@@ -230,6 +233,7 @@ GPXView = React.createClass({
 });
 
 Divider = React.createClass({
+  displayName: 'Divider',
   render: function() {
     var cutoffX;
     cutoffX = (this.props.cutoff - this.props.start) * (800 / (this.props.end - this.props.start));
@@ -241,6 +245,7 @@ Divider = React.createClass({
 });
 
 Cursor = React.createClass({
+  displayName: 'Cursor',
   render: function() {
     var c;
     c = this.props.dividerX * (this.props.end - this.props.start) / 800;
@@ -261,6 +266,7 @@ Cursor = React.createClass({
 });
 
 EleView = React.createClass({
+  displayName: 'EleView',
   render: function() {
     var duration, obj, points, sfx, sfy, t;
     duration = this.props.maxTime - this.props.start;
@@ -287,6 +293,7 @@ EleView = React.createClass({
 });
 
 HRLine = React.createClass({
+  displayName: 'HRLine',
   render: function() {
     var duration, hrline, obj, sfx, sfy, t, _ref;
     duration = this.props.maxTime - this.props.start;
@@ -310,6 +317,7 @@ HRLine = React.createClass({
 });
 
 DownloadLinks = React.createClass({
+  displayName: 'DownloadLinks',
   getInitialState: function() {
     return {
       downloadedForCutoff: null
@@ -392,6 +400,7 @@ nicetime = function(duration) {
 };
 
 TinySummary = React.createClass({
+  displayName: 'TinySummary',
   render: function() {
     var end, name, start;
     start = Date.parse(this.props.xml.querySelector('trkseg trkpt:first-child time').innerHTML);
@@ -413,6 +422,7 @@ TinySummary = React.createClass({
 });
 
 Blurb = React.createClass({
+  displayName: 'Blurb',
   render: function() {
     return React.DOM.div({
       "className": 'blurb'
@@ -421,6 +431,7 @@ Blurb = React.createClass({
 });
 
 Footer = React.createClass({
+  displayName: 'Footer',
   render: function() {
     return React.DOM.p({
       "className": 'footer'

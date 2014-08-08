@@ -1,4 +1,6 @@
 App = React.createClass
+  displayName: 'App'
+
   getInitialState: ->
     xml:          null
     cutoff:       null
@@ -26,6 +28,8 @@ App = React.createClass
 
 
 FileInput = React.createClass
+  displayName: 'FileInput'
+
   getInitialState: ->
     over: false
 
@@ -59,6 +63,8 @@ FileInput = React.createClass
 
 
 GPXView = React.createClass
+  displayName: 'GPXView'
+
   getInitialState: ->
     dividerX: 300
 
@@ -146,11 +152,15 @@ GPXView = React.createClass
 
 
 Divider = React.createClass
+  displayName: 'Divider'
+
   render: ->
     cutoffX = (@props.cutoff - @props.start) * (800 / (@props.end - @props.start))
     <path className='cutoff' d={"M #{cutoffX} 0 #{cutoffX} 170"} />
 
 Cursor = React.createClass
+  displayName: 'Cursor'
+
   render: ->
     c = @props.dividerX * (@props.end - @props.start) / 800
     <g>
@@ -161,6 +171,7 @@ Cursor = React.createClass
 
 
 EleView = React.createClass
+  displayName: 'EleView'
   #props: maxTime, maxEle, start, data
   render: ->
     duration = @props.maxTime - @props.start
@@ -175,6 +186,7 @@ EleView = React.createClass
 
 
 HRLine = React.createClass
+  displayName: 'HRLine'
   #props: maxTime, maxHR, start, data
   render: ->
     duration = @props.maxTime - @props.start
@@ -191,6 +203,8 @@ HRLine = React.createClass
 
 
 DownloadLinks = React.createClass
+  displayName: 'DownloadLinks'
+
   getInitialState: ->
     downloadedForCutoff: null
 
@@ -252,6 +266,8 @@ nicetime = (duration) ->
 
 
 TinySummary = React.createClass
+  displayName: 'TinySummary'
+
   #props: xml
   render: ->
     start = Date.parse(@props.xml.querySelector('trkseg trkpt:first-child time').innerHTML)
@@ -266,6 +282,8 @@ TinySummary = React.createClass
 
 
 Blurb = React.createClass
+  displayName: 'Blurb'
+
   render: ->
     <div className='blurb'>
       <p><em>Use this tool to split Strava activities into separate parts.</em></p>
@@ -277,5 +295,7 @@ Blurb = React.createClass
 
 
 Footer = React.createClass
+  displayName: 'Footer'
+
   render: ->
     <p className='footer'>made for fun by <a href='http://github.com/iamdanfox/gpxsplitter'>iamdanfox</a></p>
