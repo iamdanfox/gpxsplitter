@@ -14,7 +14,7 @@ MapBox = React.createClass({
     mapboxgl.accessToken = this.props.apiToken;
     m = new mapboxgl.Map({
       container: this.props.id,
-      style: this.props.styleUrl,
+      style: mapboxStyle,
       center: [40, -74.50],
       zoom: 9
     });

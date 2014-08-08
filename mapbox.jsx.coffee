@@ -12,7 +12,7 @@ MapBox = React.createClass
 
     m = new mapboxgl.Map
       container: @props.id
-      style: @props.styleUrl
+      style: mapboxStyle
       center: [40, -74.50]
       zoom: 9
     console.debug m
@@ -23,15 +23,6 @@ MapBox = React.createClass
 
   render: ->
     <div style={height: @props.height, width: @props.width, position: 'relative'} id={@props.id}></div>
-
-
-
-
-
-
-
-
-
 
 
 # MapBoxInjected = React.createClass
