@@ -166,9 +166,7 @@ GPXView = React.createClass({
     points = lines.line2.points[0] != null ? [lines.line2.points[0]] : [];
     return React.DOM.div({
       "className": 'GPXView'
-    }, React.DOM.h2(null, name), MapBox({
-      "apiToken": 'pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg',
-      "id": 'myMap',
+    }, React.DOM.h2(null, name), Map({
       "latitude": avgLat,
       "longitude": avgLon,
       "zoom": 13,

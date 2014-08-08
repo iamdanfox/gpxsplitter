@@ -1,7 +1,8 @@
-all: ui.js mapbox.js
+all: ui.js
 
-ui.js: ui.jsx.coffee
-	cjsx-transform ui.jsx.coffee | coffee -csb > ui.js
+ui.js: ui.coffee
+	coffee -cb ui.coffee
+	rm ui.coffee
 
-mapbox.js: mapbox.jsx.coffee
-	cjsx-transform mapbox.jsx.coffee | coffee -csb > mapbox.js
+ui.coffee: ui.jsx.coffee
+	cjsx-transform ui.jsx.coffee > ui.coffee
