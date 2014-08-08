@@ -108,15 +108,15 @@ GPXView = React.createClass
 
     <div className='GPXView'>
       <h2>{name}</h2>
-      # <MapBox
-      #   apiToken='pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg'
-      #   id='myMap'
-      #   latitude={avgLat}
-      #   longitude={avgLon} 
-      #   zoom=13 width=800 
-      #   height=300 
-      #   lines={lines} points={points} 
-      # />
+      <MapBox
+        apiToken='pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg'
+        id='myMap'
+        latitude={avgLat}
+        longitude={avgLon} 
+        zoom=13 width=800 
+        height=300 
+        lines={lines} points={points} 
+      />
       <svg height=170 width=800 onMouseMove={@handleMove} onMouseLeave={@handleLeave} onClick={@onClick} ref='svg'>
         { <HRLine maxTime={@end} maxHR={maxHR} start={@start} data={data} /> unless isNaN maxHR }
         <EleView maxTime={@end} maxEle={maxEle} start={@start} data={data} />

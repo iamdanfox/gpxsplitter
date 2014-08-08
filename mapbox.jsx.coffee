@@ -1,40 +1,40 @@
 
-# MapBox = React.createClass
-#   propTypes:
-#     apiToken: React.PropTypes.string.isRequired
-#     id:       React.PropTypes.string.isRequired
+MapBox = React.createClass
+  propTypes:
+    apiToken: React.PropTypes.string.isRequired
+    id:       React.PropTypes.string.isRequired
 
-#   defaultProps:
-#     styleUrl: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v4.json'
+  defaultProps:
+    styleUrl: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v4.json'
 
-#   componentDidMount: ->
-#     mapboxgl.accessToken = @props.apiToken
+  componentDidMount: ->
+    mapboxgl.accessToken = @props.apiToken
 
-#     m = new mapboxgl.Map
-#       container: @props.id
-#       style: @props.styleUrl
-#       center: [40, -74.50]
-#       zoom: 9
-#     console.debug m
+    m = new mapboxgl.Map
+      container: @props.id
+      style: @props.styleUrl
+      center: [40, -74.50]
+      zoom: 9
+    console.debug m
 
-#   shouldComponentUpdate: (nextProps, nextState) ->
-#     console.log 'shouldComponentUpdate'
-#     return false
+  shouldComponentUpdate: (nextProps, nextState) ->
+    console.log 'shouldComponentUpdate'
+    return false
 
-#   render: ->
-#     <div style={height: @props.height, width: @props.width, position: 'relative'} id={@props.id}></div>
+  render: ->
+    <div style={height: @props.height, width: @props.width, position: 'relative'} id={@props.id}></div>
 
 
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg';
+# mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg';
 
-setTimeout ->
-  m = new mapboxgl.Map
-    container: 'myMap'
-    style: 'outdoors-v4.json'
-    center: [40, -74.50]
-    zoom: 9
-, 500
+# setTimeout ->
+#   m = new mapboxgl.Map
+#     container: 'myMap'
+#     style: 'outdoors-v4.json'
+#     center: [40, -74.50]
+#     zoom: 9
+# , 500
 
 
 
