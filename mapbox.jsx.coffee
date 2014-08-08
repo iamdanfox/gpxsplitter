@@ -26,6 +26,7 @@
 
 
 
+mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg';
 
 setTimeout ->
   m = new mapboxgl.Map
