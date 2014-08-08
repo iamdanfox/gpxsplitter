@@ -167,6 +167,8 @@ GPXView = React.createClass({
     return React.DOM.div({
       "className": 'GPXView'
     }, React.DOM.h2(null, name), MapBox({
+      "apiToken": 'pk.eyJ1IjoiaWFtZGFuZm94IiwiYSI6ImhJUmlLZUUifQ.MjO_LzRrKOyWEuHPcBxDsg',
+      "id": 'myMap',
       "latitude": avgLat,
       "longitude": avgLon,
       "zoom": 13,
