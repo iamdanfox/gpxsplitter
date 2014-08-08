@@ -12,12 +12,16 @@ MapBox = React.createClass
       strokeWidth: React.PropTypes.number
     )
 
+  defaultState:
+    geoJSONSources: []
 
   defaultProps:
     styleUrl: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v4.json'
 
+
   componentDidMount: ->
     mapboxgl.accessToken = @props.apiToken
+    console.log 'componentDidMount'
 
     mapboxStyle.layers.push({
       "id": "route",
@@ -70,9 +74,29 @@ MapBox = React.createClass
           [-122.49223709106445, 37.83337825839438],
           [-122.49378204345702, 37.83368330777276]
         ]
-    route = new mapboxgl.GeoJSONSource({ data: geoJSON })
-    map.addSource('route', route)
-    console.debug map
+    geoJSONSource = new mapboxgl.GeoJSONSource({ data: geoJSON })
+    map.addSource('route', geoJSONSource)
+
+    setTimeout =>
+      geoJSONSource.setData
+        "type": "Feature",
+        "geometry":
+          "type": "LineString",
+          "coordinates":[
+            [-122.48339653015138, 37.83270036637107],
+            [-122.48356819152832, 37.832056363179625],
+            [-122.48404026031496, 37.83114119107971],
+            [-122.48404026031496, 37.83049717427869],
+            [-122.48348236083984, 37.829920943955045],
+            [-122.48356819152832, 37.82954808664175],
+            [-122.48507022857666, 37.82944639795659],
+            [-122.48610019683838, 37.82880236636284],
+          ]
+      #geoJSONSource.render() #breaks things until scroll
+      console.log geoJSONSource.map.fire('zoom')
+      # map.removeSource 'route'
+      # map.addSource('route', geoJSONSource)
+    , 1500
 
   render: ->
     <div style={height: @props.height, width: @props.width, position: 'relative'} id={@props.id}></div>
