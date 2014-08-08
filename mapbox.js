@@ -2,39 +2,36 @@
 var MapBox;
 
 MapBox = React.createClass({
-  getInitialState: function() {
-    return {
-      mapboxgl: null
-    };
+  propTypes: {
+    apiToken: React.PropTypes.string.isRequired,
+    id: React.PropTypes.string.isRequired
   },
-  statics: {
-    MAPBOX_URL: 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.2.0/mapbox-gl.js'
+  defaultProps: {
+    styleUrl: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v4.json'
   },
   componentDidMount: function() {
-    if ((this.state.mapboxgl == null) && (window.mapboxgl != null)) {
-      return this.setState({
-        mapboxgl: window.mapboxgl
-      });
-    } else {
-      return this.injectMapBox();
-    }
+    var m;
+    mapboxgl.accessToken = this.props.apiToken;
+    m = new mapboxgl.Map({
+      container: this.props.id,
+      style: this.props.styleUrl,
+      center: [40, -74.50],
+      zoom: 9
+    });
+    return console.debug(m);
   },
-  injectMapBox: function() {
-    var script;
-    script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.onload = (function(_this) {
-      return function() {
-        return _this.setState({
-          mapboxgl: window.mapboxgl
-        });
-      };
-    })(this);
-    script.src = MapBox.MAPBOX_URL;
-    return document.getElementsByTagName('head')[0].appendChild(script);
+  shouldComponentUpdate: function(nextProps, nextState) {
+    console.log('shouldComponentUpdate');
+    return false;
   },
   render: function() {
-    return React.DOM.div(null, "MapBox goes here");
+    return React.DOM.div({
+      "style": {
+        height: this.props.height,
+        width: this.props.width,
+        position: 'relative'
+      },
+      "id": this.props.id
+    });
   }
 });
