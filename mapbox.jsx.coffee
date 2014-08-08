@@ -1,8 +1,17 @@
 
 MapBox = React.createClass
+  displayName: 'MapBox'
+
   propTypes:
     apiToken: React.PropTypes.string.isRequired
     id:       React.PropTypes.string.isRequired
+    lines:    React.PropTypes.arrayOf( React.PropTypes.shape
+      id: React.PropTypes.string.isRequired
+      points: React.PropTypes.array.isRequired
+      strokeColor: React.PropTypes.string.isRequired
+      strokeWidth: React.PropTypes.number
+    )
+
 
   defaultProps:
     styleUrl: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v4.json'
