@@ -3,7 +3,7 @@ setTimeout(function() {
   var m;
   return m = new mapboxgl.Map({
     container: 'myMap',
-    style: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v4.json',
+    style: 'outdoors-v4.json',
     center: [40, -74.50],
     zoom: 9
   });
